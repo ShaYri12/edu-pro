@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme based on provided palette */
+    --background: 0 0% 96%; /* #F5F5F5 */
+    --foreground: 0 0% 0%; /* #000000 */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 0 0% 0%; /* #000000 */
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 0 0% 0%; /* #000000 */
+
+    --primary: 218 93% 50%; /* #0961F5 */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --secondary: 169 71% 29%; /* #167F71 */
+    --secondary-foreground: 0 0% 0%; /* #000000 */
+
+    --muted: 240 6% 90%; /* approx #E5E5EA */
+    --muted-foreground: 240 3% 57%; /* #8E8E93 */
+
+    --accent: 36 100% 50%; /* #FF9500 */
+    --accent-foreground: 0 0% 0%; /* #000000 */
+
+    --destructive: 3 100% 59%; /* #FF3B30 */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --border: 240 6% 90%; /* approx #E5E5EA */
+    --input: 240 6% 90%; /* approx #E5E5EA */
+    --ring: 211 100% 50%; /* #007AFF */
+
+    /* Match Tailwind radius overrides */
+    --radius: 12px;
+  }
+
+  .dark {
+    /* Dark theme mapped to provided palette */
+    --background: 0 0% 0%; /* #000000 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+
+    --card: 240 3% 12%; /* approx #1C1C1E */
+    --card-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --popover: 240 3% 12%; /* approx #1C1C1E */
+    --popover-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --primary: 218 93% 50%; /* #0961F5 */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --secondary: 169 71% 29%; /* #167F71 */
+    --secondary-foreground: 0 0% 0%; /* #000000 */
+
+    --muted: 240 3% 17%; /* approx #2C2C2E */
+    --muted-foreground: 240 3% 57%; /* #8E8E93 */
+
+    --accent: 36 100% 50%; /* #FF9500 */
+    --accent-foreground: 0 0% 0%; /* #000000 */
+
+    --destructive: 3 100% 59%; /* #FF3B30 */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --border: 240 3% 23%; /* approx #3A3A3C */
+    --input: 240 3% 23%; /* approx #3A3A3C */
+    --ring: 211 100% 50%; /* #007AFF */
+  }
+}

@@ -45,13 +45,13 @@ export default function PopularCoursesSection({
   const [selectedCategory, setSelectedCategory] = useState('Graphic Design');
 
   return (
-    <View className="py-4">
+    <View>
       <SectionHeader title="Popular Courses" onSeeAll={onSeeAll} />
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ marginBottom: 16, gap: 12 }}
+        contentContainerStyle={{ paddingTop: 10, marginBottom: 20, gap: 12 }}
         scrollEventThrottle={16}
       >
         {COURSE_CATEGORIES.map((category) => (
@@ -67,7 +67,7 @@ export default function PopularCoursesSection({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 16 }}
+        contentContainerStyle={{ paddingBottom: 30, gap: 20 }}
         scrollEventThrottle={16}
       >
         {COURSES.map((course) => (

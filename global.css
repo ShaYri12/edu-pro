@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  /* Force Mulish-Bold everywhere on WEB (targets NativeWind's generated classes) */
+  [class*="css-text"],
+  [class*="css-textinput"] {
+    font-family: "Mulish-Bold", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  }
   :root {
     /* Light theme based on provided palette */
     --background: 0 0% 96%; /* #F5F5F5 */
@@ -30,6 +35,10 @@
     --border: 240 6% 90%; /* approx #E5E5EA */
     --input: 240 6% 90%; /* approx #E5E5EA */
     --ring: 211 100% 50%; /* #007AFF */
+
+    /* Your requested colors - perfect for light theme */
+    --dark-blue: 236 36% 19%; /* #202244 - deep navy for headings, accents, buttons */
+    --light-gray: 218 6% 64%; /* #A0A4AB - soft neutral for borders, muted text, backgrounds */
 
     /* Match Tailwind radius overrides */
     --radius: 12px;
@@ -64,5 +73,9 @@
     --border: 240 3% 23%; /* approx #3A3A3C */
     --input: 240 3% 23%; /* approx #3A3A3C */
     --ring: 211 100% 50%; /* #007AFF */
+
+    /* Your requested colors - they work excellently in dark theme too */
+    --dark-blue: 236 36% 19%; /* #202244 - beautiful deep navy (great for cards, surfaces, or accents in dark mode) */
+    --light-gray: 218 6% 64%; /* #A0A4AB - soft gray (perfect for muted text, borders, and subtle elements on dark backgrounds) */
   }
 }

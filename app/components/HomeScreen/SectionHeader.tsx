@@ -9,11 +9,11 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, onSeeAll }: SectionHeaderProps) {
   return (
-    <View className="py-4 flex-row items-center justify-between">
-      <Text className="text-xl font-bold text-text">{title}</Text>
+    <View className="flex-row items-center justify-between">
+      <Text className="text-[18px] font-jost-semibold text-dark-blue">{title}</Text>
       <TouchableOpacity onPress={onSeeAll} className="flex-row items-center gap-0.5 active:opacity-70">
-        <Text className="text-primary font-bold text-sm">SEE ALL</Text>
-        <ChevronRight size={18} color="#007AFF" strokeWidth={2} />
+        <Text className="text-primary font-mulish-extrabold text-xs">SEE ALL</Text>
+        <ChevronRight size={20} color="#0961F5" strokeWidth={2} />
       </TouchableOpacity>
     </View>
   );

@@ -16,13 +16,13 @@ export default function CategoryPill({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className={`px-4 py-2.5 rounded-full ${
-        isActive ? 'bg-secondary' : 'bg-white'
+      className={`px-[18px] py-[7px] rounded-full ${
+        isActive ? 'bg-secondary' : 'bg-[#E8F1FF]'
       }`}
     >
       <Text
-        className={`text-sm font-medium ${
-          isActive ? 'text-white' : 'text-text-secondary'
+        className={`text-[13px] ${
+          isActive ? 'text-white' : 'text-dark-blue'
         }`}
       >
         {label}

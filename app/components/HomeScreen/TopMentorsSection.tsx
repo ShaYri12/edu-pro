@@ -20,12 +20,12 @@ export default function TopMentorsSection({
   onMentorPress,
 }: TopMentorsSectionProps) {
   return (
-    <View className="pt-4 pb-6">
+    <View>
       <SectionHeader title="Top Mentor" onSeeAll={onSeeAll} />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ marginTop: 16, gap: 16 }}
+        contentContainerStyle={{ marginTop: 15, gap: 18 }}
         scrollEventThrottle={16}
       >
         {MENTORS.map((mentor) => (

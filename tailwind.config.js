@@ -38,6 +38,31 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* Custom colors from your palette */
+        'dark-blue': "hsl(var(--dark-blue))",
+        'light-gray': "hsl(var(--light-gray))",
+      },
+      fontFamily: {
+        // Default Tailwind 'font-sans' mapped to Mulish-Bold
+        sans: ["Mulish-Bold", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
+
+        // Flat keys to use as classes: font-jost-semibold, font-mulish-bold, etc.
+        jost: ["Jost-Regular"],
+        "jost-thin": ["Jost-Thin"],
+        "jost-extralight": ["Jost-ExtraLight"],
+        "jost-light": ["Jost-Light"],
+        "jost-medium": ["Jost-Medium"],
+        "jost-semibold": ["Jost-SemiBold"],
+        "jost-bold": ["Jost-Bold"],
+        "jost-extrabold": ["Jost-ExtraBold"],
+
+        mulish: ["Mulish-Regular"],
+        "mulish-extralight": ["Mulish-ExtraLight"],
+        "mulish-light": ["Mulish-Light"],
+        "mulish-medium": ["Mulish-Medium"],
+        "mulish-semibold": ["Mulish-SemiBold"],
+        "mulish-bold": ["Mulish-Bold"],
+        "mulish-extrabold": ["Mulish-ExtraBold"],
       },
       borderRadius: {
         xl: "16px",

@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import SectionHeader from './SectionHeader';
-import CategoryPill from './CategoryPill';
 
 const CATEGORIES = [
   '3D Design',
   'Arts & Humanities',
   'Graphic Design',
+  'Web Development',
+  'SEO & Marketing',
+  'Finance & Accounting',
+  'Personal Development',
+  'Office Productivity',
+  'HR Management',
 ];
 
 interface CategoriesSectionProps {

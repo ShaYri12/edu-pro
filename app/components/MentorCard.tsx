@@ -4,20 +4,28 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 interface MentorCardProps {
   name: string;
   image?: string;
+  category?: string;
   onPress?: () => void;
 }
 
-export default function MentorCard({ name, image, onPress }: MentorCardProps) {
+export default function MentorCard({ name, image, category, onPress }: MentorCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className="items-center"
+      className={`items-center ${category ? "flex-col gap-[11px]" : "gap-[7px]"}`}
     >
-      <View className="w-20 h-[70px] bg-black rounded-[20px] overflow-hidden">
+      <View className={`bg-black ${category ? "rounded-full w-[66px] h-[66px]" : "rounded-[20px] w-20 h-[70px]"} overflow-hidden`}>
         {image && <Image source={{ uri: image }} className="w-full h-full" />}
       </View>
-      <Text className="text-[13px] font-jost-semibold text-dark-blue mt-[7px]">{name}</Text>
+      <View>
+        <Text className="text-[13px] font-jost-semibold text-dark-blue">{name}</Text>
+        {category &&
+          <Text className="text-[13px] text-[#545454]">
+            {category}
+          </Text>
+        }
+      </View>
     </TouchableOpacity>
   );
 }

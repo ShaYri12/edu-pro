@@ -13,7 +13,8 @@ const COURSES = [
     category: 'Graphic Design',
     rating: 4.2,
     reviews: 122,
-    price: '200',
+    price: '850',
+    students: '7830',
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const COURSES = [
     rating: 4.1,
     reviews: 230,
     price: '400',
+    students: '4020',
   },
   {
     id: 3,
@@ -30,6 +32,34 @@ const COURSES = [
     rating: 4.5,
     reviews: 145,
     price: '350',
+    students: '2005',
+  },
+  {
+    id: 4,
+    title: 'Web Developer',
+    category: 'Web Development',
+    rating: 4.6,
+    reviews: 122,
+    price: '200',
+    students: '7830',
+  },
+  {
+    id: 5,
+    title: 'Digital Marketing Caree..',
+    category: 'Graphic Design',
+    rating: 4.1,
+    reviews: 230,
+    price: '400',
+    students: '4020',
+  },
+  {
+    id: 6,
+    title: '3D Modeling Basics',
+    category: '3D Design',
+    rating: 4,
+    reviews: 145,
+    price: '350',
+    students: '2005',
   },
 ];
 
@@ -78,6 +108,7 @@ export default function PopularCoursesSection({
             rating={course.rating}
             reviews={course.reviews}
             price={`${course.price}/-`}
+            students={`${course.students}`}
             onPress={() => onCoursePress?.(course.id)}
           />
         ))}

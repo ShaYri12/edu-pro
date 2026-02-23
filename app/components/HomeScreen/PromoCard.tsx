@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { Text, TouchableOpacity, ImageBackground, StyleProp, ViewStyle } from 'react-native';
 
 interface PromoCardProps {
   discount: string;
   title: string;
   description: string;
   onPress?: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function PromoCard({
@@ -13,11 +14,13 @@ export default function PromoCard({
   title,
   description,
   onPress,
+  containerStyle,
 }: PromoCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
+      style={containerStyle}
     >
       <ImageBackground
         source={require("@/assets/images/promo-card-bg.png")}

@@ -8,6 +8,11 @@ const MENTORS = [
   { id: 2, name: 'Aman' },
   { id: 3, name: 'Rahul J' },
   { id: 4, name: 'Manav' },
+  { id: 5, name: 'Vrushab. M' },
+  { id: 6, name: 'Robert William' },
+  { id: 7, name: 'Soman' },
+  { id: 8, name: 'Manav' },
+  { id: 9, name: 'Vrushab. M' },
 ];
 
 interface TopMentorsSectionProps {

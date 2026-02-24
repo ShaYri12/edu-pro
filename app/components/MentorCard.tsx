@@ -13,7 +13,7 @@ export default function MentorCard({ name, image, category, onPress }: MentorCar
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className={`items-center ${category ? "flex-col gap-[11px]" : "gap-[7px]"}`}
+      className={`flex items-center ${category ? "gap-[11px] flex-row" : "flex-col gap-[7px]"}`}
     >
       <View className={`bg-black ${category ? "rounded-full w-[66px] h-[66px]" : "rounded-[20px] w-20 h-[70px]"} overflow-hidden`}>
         {image && <Image source={{ uri: image }} className="w-full h-full" />}

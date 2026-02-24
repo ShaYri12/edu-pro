@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import SectionHeader from './SectionHeader';
 import MentorCard from '../MentorCard';
+import { useRouter } from 'expo-router';
 
 const MENTORS = [
   { id: 1, name: 'Jiya' },
@@ -24,9 +25,14 @@ export default function TopMentorsSection({
   onSeeAll,
   onMentorPress,
 }: TopMentorsSectionProps) {
+  const router = useRouter();
+  const handleSeeAll = () => {
+    if (onSeeAll) return onSeeAll();
+    router.push('/top-mentors');
+  };
   return (
     <View>
-      <SectionHeader title="Top Mentor" onSeeAll={onSeeAll} />
+      <SectionHeader title="Top Mentor" onSeeAll={handleSeeAll} />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

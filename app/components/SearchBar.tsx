@@ -6,12 +6,18 @@ interface SearchBarProps {
   placeholder?: string;
   onSearch?: (text: string) => void;
   onFilterPress?: () => void;
+  onFocusInput?: () => void; // Navigate to search page when focusing
+  autoFocus?: boolean; // Auto focus input when mounted
+  onSubmitEditing?: () => void; // Handle keyboard submit
 }
 
 export default function SearchBar({
   placeholder = 'Search for...',
   onSearch,
   onFilterPress,
+  onFocusInput,
+  autoFocus,
+  onSubmitEditing,
 }: SearchBarProps) {
   const [text, setText] = useState('');
   const [isFocused, setIsFocused] = useState(false);   // ← NEW: tracks focus
@@ -26,7 +32,7 @@ export default function SearchBar({
       className={`
         flex-row items-center 
         bg-white
-        rounded-[15px] px-[20px] py-[13px] h-[64px]
+        rounded-[15px] ps-[20px] pe-[10px] py-[13px] h-[64px]
         border border-transparent
         transition-all duration-200
         ${isFocused 
@@ -41,9 +47,12 @@ export default function SearchBar({
         onChangeText={handleSearch}
         placeholderTextColor="#9CA3AF"
         className="flex-1 text-base text-dark-blue"
-        onFocus={() => setIsFocused(true)}
+        onFocus={() => { setIsFocused(true); onFocusInput?.(); }}
         onBlur={() => setIsFocused(false)}
         style={{ outline: 'none' }}
+        autoFocus={autoFocus}
+        returnKeyType="search"
+        onSubmitEditing={onSubmitEditing}
       />
 
       {/* Filter Button */}

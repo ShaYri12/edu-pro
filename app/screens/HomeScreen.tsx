@@ -7,10 +7,13 @@ import PopularCoursesSection from '../components/HomeScreen/PopularCoursesSectio
 import TopMentorsSection from '../components/HomeScreen/TopMentorsSection';
 import PromoCard from '../components/HomeScreen/PromoCard';
 
+import { useRouter } from 'expo-router';
+
 export default function HomeScreen() {
+  const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
   const H_PADDING = 32; // px-8
-  const ITEM_GAP = 0;
+  const ITEM_GAP = 12;
   const itemWidth = useMemo(() => screenWidth - H_PADDING * 2, [screenWidth]);
   const snapInterval = itemWidth + ITEM_GAP;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -62,7 +65,7 @@ export default function HomeScreen() {
   };
 
   const handleSeeAllCategories = () => {
-    console.log('[v0] See all categories');
+    router.push('/all-categories');
   };
 
   const handleSelectCategory = (category: string) => {
@@ -70,7 +73,7 @@ export default function HomeScreen() {
   };
 
   const handleSeeAllCourses = () => {
-    console.log('[v0] See all courses');
+    router.push('/popular-courses');
   };
 
   const handleCoursePress = (courseId: number) => {
@@ -78,7 +81,7 @@ export default function HomeScreen() {
   };
 
   const handleSeeAllMentors = () => {
-    console.log('[v0] See all mentors');
+    router.push('/top-mentors');
   };
 
   const handleMentorPress = (mentorId: number) => {
@@ -87,13 +90,17 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-[#F5F9FF] px-8 py-8"
+      className="flex-1 bg-[#F5F9FF] p-8"
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
     >
       <Header userName="ALEX" onBellPress={handleBellPress} />
 
-      <SearchBar onSearch={handleSearch} onFilterPress={handleFilterPress} />
+      <SearchBar
+        onSearch={handleSearch}
+        onFilterPress={handleFilterPress}
+        onFocusInput={() => router.push('/search')}
+      />
 
       <View style={{ marginTop: 12, position: 'relative' }}>
         <FlatList

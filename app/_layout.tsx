@@ -69,6 +69,10 @@ export default function RootLayout() {
           <UIThemeProvider>
             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
               <Stack initialRouteName="index">
+                <Stack.Screen name="popular-courses" options={{ headerShown: false }} />
+                <Stack.Screen name="top-mentors" options={{ headerShown: false }} />
+                <Stack.Screen name="search" options={{ headerShown: false }} />
+                <Stack.Screen name="all-categories" options={{ headerShown: false }} />
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />

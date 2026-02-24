@@ -26,7 +26,7 @@ export default function PromoCard({
         source={require("@/assets/images/promo-card-bg.png")}
         resizeMode="cover"
         imageStyle={{ borderRadius: 22 }}
-        className="my-[30px] px-6 py-[30px] overflow-hidden rounded-[22px] h-[180px]"
+        className="my-[30px] px-6 py-[30px] overflow-hidden rounded-[22px] h-[180px] bg-primary"
       >
         <Text className="text-[15px] font-mulish-extrabold text-white relative">
           {discount}

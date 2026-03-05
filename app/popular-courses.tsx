@@ -1,54 +1,23 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import CategoryPill from './components/HomeScreen/CategoryPill';
 import CourseCard from './components/CourseCard';
 import { useRouter } from 'expo-router';
+import { courses as ALL_COURSES } from '@/constants/courses';
 
 const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & I'];
 
-const COURSES = [
-  {
-    id: 1,
-    title: 'Graphic Design Advanced',
-    category: 'Graphic Design',
-    rating: 4.2,
-    reviews: 122,
-    price: '7058',
-    students: '7830',
-  },
-  {
-    id: 2,
-    title: 'Advertisement Design',
-    category: 'Graphic Design',
-    rating: 3.9,
-    reviews: 230,
-    price: '800',
-    students: '12680',
-  },
-  {
-    id: 3,
-    title: 'Graphic Design Advanced',
-    category: 'Programming',
-    rating: 4.2,
-    reviews: 145,
-    price: '599',
-    students: '990',
-  },
-  {
-    id: 4,
-    title: 'Web Developer conce..',
-    category: 'Web Development',
-    rating: 4.9,
-    reviews: 122,
-    price: '499',
-    students: '14580',
-  },
-];
+// Use centralized courses data
+const COURSES = ALL_COURSES;
 
 export default function PopularCoursesRoute() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const filtered = useMemo(() => {
+    if (selectedCategory === 'All') return COURSES;
+    return COURSES.filter((c) => c.category === selectedCategory);
+  }, [selectedCategory]);
 
   return (
     <ScrollView
@@ -62,7 +31,7 @@ export default function PopularCoursesRoute() {
           <ArrowLeft size={24} color="#0B1354" />
         </TouchableOpacity>
         <Text className="ml-3 text-dark-blue font-jost-semibold text-[21px]">
-          All Category
+          Popular Courses
         </Text>
       </View>
 
@@ -85,7 +54,7 @@ export default function PopularCoursesRoute() {
 
       {/* Course list */}
       <View className="gap-4">
-        {COURSES.map((course) => (
+        {filtered.map((course) => (
           <CourseCard
             key={course.id}
             title={course.title}
@@ -95,6 +64,7 @@ export default function PopularCoursesRoute() {
             price={`${course.price}/-`}
             students={`${course.students}`}
             variant="list"
+            onPress={() => router.push({ pathname: '/course', params: { id: String(course.id) } })}
           />
         ))}
       </View>

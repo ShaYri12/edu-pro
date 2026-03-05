@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { View, Text, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ArrowLeft, X, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import SearchBar from '../components/SearchBar';
+import CourseCard from '../components/CourseCard';
+import MentorCard from '../components/MentorCard';
+import { courses as ALL_COURSES } from '@/constants/courses';
 
 const STORAGE_KEY = '@search_history_v1';
 const MAX_HISTORY = 20;
@@ -11,8 +15,10 @@ const MAX_HISTORY = 20;
 export default function SearchScreen() {
   const router = useRouter();
   const [query, setQuery] = useState('');
+  const [committedQuery, setCommittedQuery] = useState(''); // query that was submitted
   const [history, setHistory] = useState<string[]>([]);
   const [showAll, setShowAll] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'Courses' | 'Mentors'>('Courses');
 
   // Load history
   useEffect(() => {
@@ -51,13 +57,51 @@ export default function SearchScreen() {
     await saveHistory(next);
   }, [history, saveHistory]);
 
-  const handleSubmit = useCallback(async () => {
+  const submitWithTerm = useCallback(async (term: string) => {
+    const t = term.trim();
+    if (!t) return;
     Keyboard.dismiss();
-    await addToHistory(query);
-    // TODO: navigate to search results
-  }, [addToHistory, query]);
+    await addToHistory(t);
+    setCommittedQuery(t);
+  }, [addToHistory]);
 
-  const dataToRender = useMemo(() => (showAll ? history : history.slice(0, 8)), [history, showAll]);
+  const handleSubmit = useCallback(async () => {
+    await submitWithTerm(query);
+  }, [query, submitWithTerm]);
+
+  // Mock data to demonstrate results
+  const COURSE_DATA = ALL_COURSES;
+
+  const MENTOR_DATA = [
+    { id: 'm1', name: 'Alice Johnson', category: 'Graphic Design' },
+    { id: 'm2', name: 'Bob Smith', category: 'Web Development' },
+    { id: 'm3', name: 'Carol Lee', category: '3D Design' },
+  ];
+
+  const filteredCourses = useMemo(() => {
+    const q = committedQuery.trim().toLowerCase();
+    if (!q) return [] as typeof COURSE_DATA;
+    return COURSE_DATA.filter(
+      (c) => c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q)
+    );
+  }, [committedQuery]);
+
+  const filteredMentors = useMemo(() => {
+    const q = committedQuery.trim().toLowerCase();
+    if (!q) return [] as typeof MENTOR_DATA;
+    return MENTOR_DATA.filter(
+      (m) => m.name.toLowerCase().includes(q) || (m.category || '').toLowerCase().includes(q)
+    );
+  }, [committedQuery]);
+
+  const resultsCount = selectedTab === 'Courses' ? filteredCourses.length : filteredMentors.length;
+
+  const dataToRender = useMemo(() => {
+    const base = committedQuery === '' && query.trim()
+      ? history.filter((t) => t.toLowerCase().includes(query.trim().toLowerCase()))
+      : history;
+    return showAll ? base : base.slice(0, 8);
+  }, [history, showAll, query, committedQuery]);
 
   return (
     <View className="flex-1 bg-[#F5F9FF]">
@@ -77,52 +121,116 @@ export default function SearchScreen() {
         {/* Search Bar */}
         <SearchBar
           placeholder="Graphic Design"
-          onSearch={setQuery}
+          onSearch={(t) => { setQuery(t); setCommittedQuery(''); }}
           onSubmitEditing={handleSubmit}
           autoFocus
         />
 
-        {/* Recents Header */}
-        <View className="mt-[24px] flex-row items-center justify-between">
-          <Text className="text-dark-blue font-jost-semibold text-[15px]">Recents Search</Text>
-          {history.length > 8 && (
-            <TouchableOpacity
-              onPress={() => setShowAll((s) => !s)}
-              activeOpacity={0.7}
-              className="flex-row items-center"
-            >
-              <Text className="text-primary font-mulish-extrabold text-[12px]">
-                {showAll ? 'SHOW LESS' : 'SEE ALL'}
-              </Text>
-              <ChevronRight size={18} color="#0961F5" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* History Items */}
-        <View className="mt-[30px] gap-y-[30px]">
-          {dataToRender.length > 0 ? (
-            dataToRender.map((item, index) => (
-              <View key={`${item}-${index}`} className="flex-row items-center justify-between">
+        {committedQuery === '' ? (
+          <>
+            {/* Recents Header */}
+            <View className="mt-[24px] flex-row items-center justify-between">
+              <Text className="text-dark-blue font-jost-semibold text-[15px]">Recents Search</Text>
+              {history.length > 8 && (
                 <TouchableOpacity
-                  className="flex-1 pr-3 active:opacity-80"
-                  onPress={() => {
-                    setQuery(item);
-                    // handleSubmit(); // uncomment if you want instant search
-                  }}
+                  onPress={() => setShowAll((s) => !s)}
+                  activeOpacity={0.7}
+                  className="flex-row items-center"
                 >
-                  <Text className="text-light-gray text-[15px]">{item}</Text>
+                  <Text className="text-primary font-mulish-extrabold text-[12px]">
+                    {showAll ? 'SHOW LESS' : 'SEE ALL'}
+                  </Text>
+                  <ChevronRight size={18} color="#0961F5" />
                 </TouchableOpacity>
+              )}
+            </View>
 
-                <TouchableOpacity onPress={() => removeFromHistory(item)} activeOpacity={0.7}>
-                  <X size={18} color="#472D2D" />
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text className="mt-3 text-light-gray text-[14px]">No recent searches</Text>
-          )}
-        </View>
+            {/* History Items */}
+            <View className="mt-[30px] gap-y-[30px]">
+              {dataToRender.length > 0 ? (
+                dataToRender.map((item, index) => (
+                  <View key={`${item}-${index}`} className="flex-row items-center justify-between">
+                    <TouchableOpacity
+                      className="flex-1 pr-3 active:opacity-80"
+                      onPress={() => {
+                        setQuery(item);
+                        submitWithTerm(item);
+                      }}
+                    >
+                      <Text className="text-light-gray text-[15px]">{item}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => removeFromHistory(item)} activeOpacity={0.7}>
+                      <X size={18} color="#472D2D" />
+                    </TouchableOpacity>
+                  </View>
+                ))
+              ) : (
+                <Text className="mt-3 text-light-gray text-[14px]">No recent searches</Text>
+              )}
+            </View>
+          </>
+        ) : (
+          <>
+            {/* Tabs */}
+            <View className="mt-[24px] flex-row items-center gap-[20px]">
+              <TouchableOpacity
+                onPress={() => setSelectedTab('Courses')}
+                activeOpacity={0.8}
+                className={`${selectedTab === 'Courses' ? 'bg-[#167F71]' : 'bg-[#E8F1FF]'} px-6 py-[14px] rounded-[24px] flex-1 text-center`}
+              >
+                <Text className={`${selectedTab === 'Courses' ? 'text-white' : 'text-dark-blue'} font-mulish-extrabold text-center`}>
+                  Courses
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSelectedTab('Mentors')}
+                activeOpacity={0.8}
+                className={`${selectedTab === 'Mentors' ? 'bg-[#167F71]' : 'bg-[#E8F1FF]'} px-6 py-[14px] rounded-[24px] flex-1 text-center`}
+              >
+                <Text className={`${selectedTab === 'Mentors' ? 'text-white' : 'text-dark-blue'} font-mulish-extrabold text-center`}>
+                  Mentors
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Result header */}
+            <View className="mt-[15px] flex-row items-center justify-between">
+              <Text className="text-[15px] text-dark-blue font-jost-semibold">
+                Result for <Text className="text-primary">“{committedQuery}”</Text>
+              </Text>
+              <TouchableOpacity activeOpacity={0.7} className="flex-row items-center">
+                <Text className="text-primary font-mulish-extrabold text-[12px]">{resultsCount} FOUNDS</Text>
+                <ChevronRight size={18} color="#0961F5" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Results list */}
+            <View className="mt-4 gap-4">
+              {selectedTab === 'Courses'
+                ? (
+                  filteredCourses.map((c) => (
+                    <CourseCard
+                      key={c.id}
+                      title={c.title}
+                      category={c.category}
+                      rating={c.rating}
+                      reviews={c.reviews}
+                      price={`${c.price}/-`}
+                      students={`${c.students}`}
+                      variant="list"
+                      onPress={() => router.push({ pathname: '/course', params: { id: String(c.id) } })}
+                    />
+                  ))
+                )
+                : (
+                  filteredMentors.map((m) => (
+                    <MentorCard key={m.id} name={m.name} category={m.category} onPress={() => {}} />
+                  ))
+                )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </View>
   );

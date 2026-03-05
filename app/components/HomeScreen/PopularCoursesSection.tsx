@@ -3,65 +3,11 @@ import { View, ScrollView } from 'react-native';
 import SectionHeader from './SectionHeader';
 import CategoryPill from './CategoryPill';
 import CourseCard from '../CourseCard';
+import { courses as ALL_COURSES } from '@/constants/courses';
 
 const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & I'];
 
-const COURSES = [
-  {
-    id: 1,
-    title: 'Graphic Design Advanced',
-    category: 'Graphic Design',
-    rating: 4.2,
-    reviews: 122,
-    price: '850',
-    students: '7830',
-  },
-  {
-    id: 2,
-    title: 'Advertisement Design',
-    category: 'Graphic Design',
-    rating: 4.1,
-    reviews: 230,
-    price: '400',
-    students: '4020',
-  },
-  {
-    id: 3,
-    title: '3D Modeling Basics',
-    category: '3D Design',
-    rating: 4.5,
-    reviews: 145,
-    price: '350',
-    students: '2005',
-  },
-  {
-    id: 4,
-    title: 'Web Developer',
-    category: 'Web Development',
-    rating: 4.6,
-    reviews: 122,
-    price: '200',
-    students: '7830',
-  },
-  {
-    id: 5,
-    title: 'Digital Marketing Caree..',
-    category: 'Graphic Design',
-    rating: 4.1,
-    reviews: 230,
-    price: '400',
-    students: '4020',
-  },
-  {
-    id: 6,
-    title: '3D Modeling Basics',
-    category: '3D Design',
-    rating: 4,
-    reviews: 145,
-    price: '350',
-    students: '2005',
-  },
-];
+const COURSES = ALL_COURSES;
 
 interface PopularCoursesSectionProps {
   onSeeAll?: () => void;

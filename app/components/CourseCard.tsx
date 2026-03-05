@@ -35,7 +35,8 @@ export default function CourseCard({
         onPress={onPress}
         activeOpacity={0.8}
         className="w-full bg-white rounded-2xl overflow-hidden"
-        style={{ boxShadow: '0px 6px 16px 0px #00000012' }}
+        style={{ boxShadow: '0px 4px 10px 0px #00000014' }}
+        
       >
         <View className="flex-row items-stretch">
           <View className="w-[130px] bg-black">
@@ -58,11 +59,11 @@ export default function CourseCard({
               </TouchableOpacity>
             </View>
 
-            <Text className="text-base font-jost-semibold text-dark-blue mt-[6px] mb-[10px] line-clamp-1">
+            <Text className="text-base font-jost-semibold text-dark-blue mt-[6px] mb-1 line-clamp-1">
               {title}
             </Text>
 
-            <Text className="text-[17px] font-mulish-extrabold text-primary mb-[8px]">{price}</Text>
+            <Text className="text-[17px] font-mulish-extrabold text-primary mb-[5px]">{price}</Text>
 
             <View className="flex-row items-center gap-[6px]">
               <View className="flex-row items-center gap-[3px]">

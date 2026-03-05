@@ -77,7 +77,7 @@ export default function HomeScreen() {
   };
 
   const handleCoursePress = (courseId: number) => {
-    console.log('[v0] Course selected:', courseId);
+    router.push({ pathname: '/course', params: { id: String(courseId) } });
   };
 
   const handleSeeAllMentors = () => {

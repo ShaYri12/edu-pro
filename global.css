@@ -29,7 +29,7 @@
     --accent: 36 100% 50%; /* #FF9500 */
     --accent-foreground: 0 0% 0%; /* #000000 */
 
-    --destructive: 3 100% 59%; /* #FF3B30 */
+    --destructive: 24 100% 50%; /* #FF6B00 */
     --destructive-foreground: 0 0% 100%; /* #FFFFFF */
 
     --border: 240 6% 90%; /* approx #E5E5EA */
@@ -67,7 +67,7 @@
     --accent: 36 100% 50%; /* #FF9500 */
     --accent-foreground: 0 0% 0%; /* #000000 */
 
-    --destructive: 3 100% 59%; /* #FF3B30 */
+    --destructive: 24 100% 50%; /* #FF6B00 */
     --destructive-foreground: 0 0% 100%; /* #FFFFFF */
 
     --border: 240 3% 23%; /* approx #3A3A3C */

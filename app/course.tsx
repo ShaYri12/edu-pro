@@ -83,7 +83,7 @@ export default function CourseDetailRoute() {
           {/* Floating course card */}
           <View className="relative">
             <View
-              className="bg-white rounded-2xl p-4 -mt-[34px]"
+              className="bg-white rounded-2xl pt-9 pb-[26px] -mt-[34px]"
               style={{ boxShadow: '0px 4px 10px 0px #00000014' }}
             >
               {/* Floating bookmark action */}
@@ -93,7 +93,7 @@ export default function CourseDetailRoute() {
                 </View>
               </View>
 
-              <View className="flex-row items-start justify-between">
+              <View className="flex-row items-start justify-between px-5">
                 <View className="flex-1 pr-3">
                   <Text className="text-xs text-destructive">{course.category}</Text>
                   <Text className="text-[18px] font-jost-semibold text-dark-blue mt-1 line-clamp-2">
@@ -104,12 +104,12 @@ export default function CourseDetailRoute() {
                   <View className="flex-row items-center gap-4 mt-2">
                     <View className="flex-row items-center gap-1">
                       <BookOpen size={14} color="#6B7280" />
-                      <Text className="text-[12px] text-[#6B7280]">{classesText}</Text>
+                      <Text className="text-[12px] text-light-gray">{classesText}</Text>
                     </View>
                     <View className="w-[4px] h-[4px] rounded-full bg-[#D1D5DB]" />
                     <View className="flex-row items-center gap-1">
                       <Clock size={14} color="#6B7280" />
-                      <Text className="text-[12px] text-[#6B7280]">{hoursText}</Text>
+                      <Text className="text-[12px] text-light-gray">{hoursText}</Text>
                     </View>
                   </View>
                 </View>
@@ -124,31 +124,30 @@ export default function CourseDetailRoute() {
 
               {/* Tabs: About / Curriculum refined styling */}
               <View className="mt-4">
-                <View className="flex-row items-stretch rounded-t-xl overflow-hidden">
+                <View className="flex-row items-stretch  overflow-hidden">
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => setActiveTab('About')}
-                    className={`flex-1 items-center py-3 ${activeTab === 'About' ? 'bg-[#E9F2FF]' : 'bg-transparent'}`}
+                    className={`flex-1 items-center p-4 border-2 ${activeTab === 'About' ? 'bg-[#F5F9FF] border-[#E8F1FF]' : 'bg-[#E8F1FF] border-[#E8F1FF]'}`}
                   >
-                    <Text className={`${activeTab === 'About' ? 'text-[#0B1354] font-jost-semibold' : 'text-[#6B7280]'}`}>About</Text>
+                    <Text className="text-dark-blue font-jost-semibold">About</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => setActiveTab('Curriculum')}
-                    className={`flex-1 items-center py-3 ${activeTab === 'Curriculum' ? 'bg-[#E9F2FF]' : 'bg-transparent'}`}
+                    className={`flex-1 items-center p-4 border-2 ${activeTab === 'Curriculum' ? 'bg-[#F5F9FF] border-[#E8F1FF]' : 'bg-[#E8F1FF] border-[#E8F1FF]'}`}
                   >
-                    <Text className={`${activeTab === 'Curriculum' ? 'text-[#0B1354] font-jost-semibold' : 'text-[#6B7280]'}`}>Curriculum</Text>
+                    <Text className="text-dark-blue font-jost-semibold">Curriculum</Text>
                   </TouchableOpacity>
                 </View>
-                <View className="h-[1px] bg-[#E5E7EB]" />
               </View>
 
               {activeTab === 'About' ? (
-                <Text className="text-[13px] text-[#6B7280] mt-3">
+                <Text className="text-[13px] text-light-gray mt-4 px-5">
                   {course.description} <Text className="text-primary">Read More</Text>
                 </Text>
               ) : (
-                <View className="mt-3">
+                <View className="mt-4 px-5">
                   {/* Section header */}
                   <View className="flex-row items-center justify-between py-2">
                     <Text className="text-[13px] text-dark-blue">
@@ -166,7 +165,7 @@ export default function CourseDetailRoute() {
                       </View>
                       <View>
                         <Text className="text-[14px] text-dark-blue line-clamp-1">Why Using Graphic De..</Text>
-                        <Text className="text-[12px] text-[#6B7280]">15 Mins</Text>
+                        <Text className="text-[12px] text-light-gray">15 Mins</Text>
                       </View>
                     </View>
                     <View className="w-[34px] h-[34px] rounded-full bg-primary items-center justify-center">
@@ -183,7 +182,7 @@ export default function CourseDetailRoute() {
                       </View>
                       <View>
                         <Text className="text-[14px] text-dark-blue line-clamp-1">Setup Your Graphic De..</Text>
-                        <Text className="text-[12px] text-[#6B7280]">10 Mins</Text>
+                        <Text className="text-[12px] text-light-gray">10 Mins</Text>
                       </View>
                     </View>
                     <View className="w-[34px] h-[34px] rounded-full bg-primary items-center justify-center">
@@ -197,7 +196,7 @@ export default function CourseDetailRoute() {
 
           {/* Instructor */}
           <View className="mt-6">
-            <Text className="text-[#6B7280] text-[13px] mb-3">Instructor</Text>
+            <Text className="text-light-gray text-[13px] mb-3">Instructor</Text>
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-3">
                 <View className="w-[44px] h-[44px] rounded-full bg-black overflow-hidden">
@@ -223,7 +222,7 @@ export default function CourseDetailRoute() {
 
           {/* What you'll get */}
           <View className="mt-6">
-            <Text className="text-[#6B7280] text-[13px] mb-3">What You’ll Get</Text>
+            <Text className="text-light-gray text-[13px] mb-3">What You’ll Get</Text>
             <View className="gap-4">
               {course.features.map((f, idx) => (
                 <View key={idx} className="flex-row items-center gap-3">
@@ -240,7 +239,7 @@ export default function CourseDetailRoute() {
           {course.reviewsList.length > 0 && (
             <View className="mt-6">
               <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-[#6B7280] text-[13px]">Reviews</Text>
+                <Text className="text-light-gray text-[13px]">Reviews</Text>
                 <TouchableOpacity className="flex-row items-center gap-1" activeOpacity={0.7}>
                   <Text className="text-primary text-[12px] font-mulish-extrabold">SEE ALL</Text>
                   <ChevronRight size={16} color="#0961F5" />
@@ -262,10 +261,10 @@ export default function CourseDetailRoute() {
                         </View>
                       </View>
                     </View>
-                    <Text className="text-[13px] text-[#6B7280] mt-2 mb-3">{r.text}</Text>
+                    <Text className="text-[13px] text-light-gray mt-2 mb-3">{r.text}</Text>
                     <View className="flex-row items-center gap-4">
-                      <Text className="text-[12px] text-[#6B7280]">❤ {r.likes}</Text>
-                      <Text className="text-[12px] text-[#6B7280]">{r.timeAgo}</Text>
+                      <Text className="text-[12px] text-light-gray">❤ {r.likes}</Text>
+                      <Text className="text-[12px] text-light-gray">{r.timeAgo}</Text>
                     </View>
                   </View>
                 ))}

@@ -3,11 +3,9 @@ import { View, ScrollView } from 'react-native';
 import SectionHeader from './SectionHeader';
 import CategoryPill from './CategoryPill';
 import CourseCard from '../CourseCard';
-import { courses as ALL_COURSES } from '@/constants/courses';
+import { getTopCourses, listCoursesByCategory } from '@/constants/courses';
 
-const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & I'];
-
-const COURSES = ALL_COURSES;
+const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & Humanities', 'Web Development', 'SEO & Marketing', 'Finance & Accounting', 'Personal Development', 'Office Productivity', 'HR Management'];
 
 interface PopularCoursesSectionProps {
   onSeeAll?: () => void;
@@ -18,7 +16,7 @@ export default function PopularCoursesSection({
   onSeeAll,
   onCoursePress,
 }: PopularCoursesSectionProps) {
-  const [selectedCategory, setSelectedCategory] = useState('Graphic Design');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   return (
     <View>
@@ -46,7 +44,7 @@ export default function PopularCoursesSection({
         contentContainerStyle={{ paddingBottom: 30, gap: 20 }}
         scrollEventThrottle={16}
       >
-        {COURSES.map((course) => (
+        {(selectedCategory === 'All' ? getTopCourses(10) : listCoursesByCategory(selectedCategory)).map((course) => (
           <CourseCard
             key={course.id}
             title={course.title}
@@ -55,6 +53,7 @@ export default function PopularCoursesSection({
             reviews={course.reviews}
             price={`${course.price}/-`}
             students={`${course.students}`}
+            image={course.image}
             onPress={() => onCoursePress?.(course.id)}
           />
         ))}

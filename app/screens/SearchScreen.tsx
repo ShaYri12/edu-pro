@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import SearchBar from '../components/SearchBar';
 import CourseCard from '../components/CourseCard';
 import MentorCard from '../components/MentorCard';
-import { courses as ALL_COURSES } from '@/constants/courses';
+import { searchCourses, searchMentors } from '@/constants/courses';
 
 const STORAGE_KEY = '@search_history_v1';
 const MAX_HISTORY = 20;
@@ -70,29 +70,13 @@ export default function SearchScreen() {
   }, [query, submitWithTerm]);
 
   // Mock data to demonstrate results
-  const COURSE_DATA = ALL_COURSES;
+  const COURSE_DATA = searchCourses(committedQuery);
 
-  const MENTOR_DATA = [
-    { id: 'm1', name: 'Alice Johnson', category: 'Graphic Design' },
-    { id: 'm2', name: 'Bob Smith', category: 'Web Development' },
-    { id: 'm3', name: 'Carol Lee', category: '3D Design' },
-  ];
+  const MENTOR_DATA = searchMentors(committedQuery);
 
-  const filteredCourses = useMemo(() => {
-    const q = committedQuery.trim().toLowerCase();
-    if (!q) return [] as typeof COURSE_DATA;
-    return COURSE_DATA.filter(
-      (c) => c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q)
-    );
-  }, [committedQuery]);
+  const filteredCourses = COURSE_DATA;
 
-  const filteredMentors = useMemo(() => {
-    const q = committedQuery.trim().toLowerCase();
-    if (!q) return [] as typeof MENTOR_DATA;
-    return MENTOR_DATA.filter(
-      (m) => m.name.toLowerCase().includes(q) || (m.category || '').toLowerCase().includes(q)
-    );
-  }, [committedQuery]);
+  const filteredMentors = MENTOR_DATA;
 
   const resultsCount = selectedTab === 'Courses' ? filteredCourses.length : filteredMentors.length;
 
@@ -218,6 +202,7 @@ export default function SearchScreen() {
                       reviews={c.reviews}
                       price={`${c.price}/-`}
                       students={`${c.students}`}
+                      image={c.image}
                       variant="list"
                       onPress={() => router.push({ pathname: '/course', params: { id: String(c.id) } })}
                     />
@@ -225,7 +210,7 @@ export default function SearchScreen() {
                 )
                 : (
                   filteredMentors.map((m) => (
-                    <MentorCard key={m.id} name={m.name} category={m.category} onPress={() => {}} />
+                    <MentorCard key={m.id} name={m.name} category={m.category} image={m.avatar} onPress={() => {}} />
                   ))
                 )}
             </View>

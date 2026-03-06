@@ -63,9 +63,9 @@ export default function CourseDetailRoute() {
         contentContainerStyle={{ paddingBottom: 90 }}
       >
         {/* Top hero image placeholder */}
-        <View className="w-full h-[220px] bg-black">
+        <View className="w-full h-[220px] bg-black overflow-hidden">
           {course.image ? (
-            <Image source={{ uri: course.image }} className="w-full h-full" resizeMode="cover" />
+            <Image source={course.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
           ) : null}
 
           {/* Back button overlay */}
@@ -200,7 +200,11 @@ export default function CourseDetailRoute() {
             <Text className="text-[#6B7280] text-[13px] mb-3">Instructor</Text>
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-black" />
+                <View className="w-[44px] h-[44px] rounded-full bg-black overflow-hidden">
+                  {course.instructor.avatar && (
+                    <Image source={course.instructor.avatar} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                  )}
+                </View>
                 <View>
                   <View className="flex-row items-center gap-2">
                     <Text className="text-[15px] font-jost-semibold text-dark-blue">{course.instructor.name}</Text>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import { Star } from 'lucide-react-native';
 
 interface CourseCardProps {
@@ -8,7 +8,7 @@ interface CourseCardProps {
   rating: number;
   reviews: number;
   price: string;
-  image?: string;
+  image?: ImageSourcePropType;
   students?: string;
   onPress?: () => void;
   onBookmark?: () => void;
@@ -39,8 +39,10 @@ export default function CourseCard({
         
       >
         <View className="flex-row items-stretch">
-          <View className="w-[130px] bg-black">
-            {image && <Image source={{ uri: image }} className="w-full h-full" />}
+          <View className="w-[130px] bg-black overflow-hidden">
+            {image && (
+              <Image source={image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+            )}
           </View>
 
           <View className="flex-1 px-[14px] py-[14px]">
@@ -89,8 +91,10 @@ export default function CourseCard({
       className="w-[260px] bg-white rounded-xl overflow-hidden"
       style={{ boxShadow: '0px 4px 10px 0px #00000014' }}
     >
-      <View className="w-full h-[134px] bg-black rounded-t-xl">
-        {image && <Image source={{ uri: image }} className="w-full h-full" />}
+      <View className="w-full h-[134px] bg-black rounded-t-xl overflow-hidden">
+        {image && (
+          <Image source={image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+        )}
       </View>
 
       <View className="px-[14px] pt-[10px] pb-[21px]">

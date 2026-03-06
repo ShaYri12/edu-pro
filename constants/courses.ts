@@ -1,10 +1,12 @@
 // Centralized course data for reuse across the app
 // Update this file to add/modify courses in one place.
 
+import { ImageSourcePropType } from 'react-native';
+
 export interface Review {
   id: string;
   user: string;
-  avatar?: string; // remote URL or local require path
+  avatar?: ImageSourcePropType; // local require or remote
   rating: number;
   text: string;
   likes: number;
@@ -14,7 +16,15 @@ export interface Review {
 export interface Instructor {
   name: string;
   title: string; // e.g. 'Graphic Design'
-  avatar?: string;
+  avatar?: ImageSourcePropType;
+  verified?: boolean;
+}
+
+export interface Mentor {
+  id: number;
+  name: string;
+  category: string;
+  avatar?: ImageSourcePropType;
   verified?: boolean;
 }
 
@@ -30,7 +40,7 @@ export interface Course {
   reviews: number;
   price: number; // numeric base price, UI can format with '/-'
   students: number;
-  image?: string; // thumbnail/cover image
+  image?: ImageSourcePropType; // thumbnail/cover image
   description: string; // about description
   curriculum?: string[]; // optional list of curriculum points
   instructor: Instructor;
@@ -47,7 +57,7 @@ export const courses: Course[] = [
     reviews: 499,
     price: 499,
     students: 7830,
-    image: undefined,
+    image: require('../assets/images/graphic-design.jpg'),
     description:
       'Graphic Design is now a popular profession. Learn core design principles, typography, color theory, and composition with hands-on projects designed to build a strong portfolio.',
     curriculum: [
@@ -61,7 +71,7 @@ export const courses: Course[] = [
     instructor: {
       name: 'Robert jr',
       title: 'Graphic Design',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-1.jpg'),
       verified: true,
     },
     features: [
@@ -102,7 +112,7 @@ export const courses: Course[] = [
     reviews: 230,
     price: 800,
     students: 12680,
-    image: undefined,
+    image: require('../assets/images/graphic-design.jpg'),
     description:
       'Master ad creatives for digital and print. Learn messaging, visual hierarchy, and conversion-focused layouts to build compelling advertisements.',
     curriculum: [
@@ -115,7 +125,7 @@ export const courses: Course[] = [
     instructor: {
       name: 'Elena Brooks',
       title: 'Art Director',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-2.jpg'),
       verified: true,
     },
     features: [
@@ -146,7 +156,7 @@ export const courses: Course[] = [
     reviews: 145,
     price: 350,
     students: 2005,
-    image: undefined,
+    image: require('../assets/images/3d-design.jpg'),
     description:
       'Start your 3D design journey. Learn modeling tools, topology basics, and rendering workflows to create stunning 3D assets.',
     curriculum: [
@@ -159,7 +169,7 @@ export const courses: Course[] = [
     instructor: {
       name: 'Chris Nolan',
       title: '3D Generalist',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-3.jpeg'),
       verified: true,
     },
     features: [
@@ -187,7 +197,7 @@ export const courses: Course[] = [
     reviews: 122,
     price: 200,
     students: 7830,
-    image: undefined,
+    image: require('../assets/images/web-development.jpg'),
     description:
       'Become a modern web developer. Learn HTML, CSS, JavaScript, and frameworks to build responsive web apps and sites.',
     curriculum: [
@@ -200,7 +210,7 @@ export const courses: Course[] = [
     instructor: {
       name: 'Alex Kim',
       title: 'Frontend Engineer',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-2.jpg'),
       verified: true,
     },
     features: [
@@ -229,7 +239,7 @@ export const courses: Course[] = [
     reviews: 230,
     price: 400,
     students: 4020,
-    image: undefined,
+    image: require('../assets/images/graphic-design.jpg'),
     description:
       'Grow your marketing skills. Understand audiences, messaging, targeting, and analytics for multi-channel campaigns.',
     curriculum: [
@@ -241,7 +251,7 @@ export const courses: Course[] = [
     instructor: {
       name: 'Dana Scott',
       title: 'Marketing Strategist',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-5.jpg'),
       verified: false,
     },
     features: [
@@ -268,13 +278,13 @@ export const courses: Course[] = [
     reviews: 145,
     price: 350,
     students: 2005,
-    image: undefined,
+    image: require('../assets/images/3d-design.jpg'),
     description:
       'Hands-on introduction to 3D. Build and render your first 3D scenes with guided lessons and exercises.',
     instructor: {
       name: 'Chris Nolan',
       title: '3D Generalist',
-      avatar: undefined,
+      avatar: require('../assets/images/avatar-1.jpg'),
       verified: true,
     },
     features: [
@@ -294,4 +304,50 @@ export function getCourseById(id: number | string): Course | undefined {
 export function listCoursesByCategory(category?: string): Course[] {
   if (!category || category === 'All') return courses;
   return courses.filter((c) => c.category === category);
+}
+
+export function getTopCourses(limit: number = 10): Course[] {
+  return [...courses]
+    .sort((a, b) => b.students - a.students || b.rating - a.rating)
+    .slice(0, limit);
+}
+
+export function searchCourses(query: string): Course[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return courses.filter(
+    (c) => c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q)
+  );
+}
+
+// Mentors derived from course instructors to keep a single source of truth
+export const mentors: Mentor[] = Array.from(
+  new Map(
+    courses.map((c) => [
+      `${c.instructor.name}__${c.instructor.title}`,
+      {
+        id: c.id,
+        name: c.instructor.name,
+        category: c.instructor.title,
+        avatar: c.instructor.avatar,
+        verified: c.instructor.verified,
+      } as Mentor,
+    ])
+  ).values()
+);
+
+export function getTopMentors(limit: number = 9): Mentor[] {
+  // Sort mentors by total students across their courses (fallback to course students via id match)
+  const byId = new Map(courses.map((c) => [c.id, c.students]));
+  return [...mentors]
+    .sort((a, b) => (byId.get(b.id) || 0) - (byId.get(a.id) || 0))
+    .slice(0, limit);
+}
+
+export function searchMentors(query: string): Mentor[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return mentors.filter(
+    (m) => m.name.toLowerCase().includes(q) || (m.category || '').toLowerCase().includes(q)
+  );
 }

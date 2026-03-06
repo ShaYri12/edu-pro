@@ -3,21 +3,9 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { ArrowLeft, Search as SearchIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import MentorCard from '../components/MentorCard';
+import { mentors as ALL_MENTORS } from '@/constants/courses';
 
-const MENTORS = [
-  { id: 1, name: 'Jiya Shetty', category: '3D Design' },
-  { id: 2, name: 'Donald S', category: 'Arts & Humanities' },
-  { id: 3, name: 'Aman', category: 'Personal Development' },
-  { id: 4, name: 'Vrushab. M', category: 'SEO & Marketing' },
-  { id: 5, name: 'Robert William', category: 'Office Productivity' },
-  { id: 6, name: 'Soman', category: 'Web Development' },
-  { id: 7, name: 'Jiya Shetty', category: '3D Design' },
-  { id: 8, name: 'Donald S', category: 'Arts & Humanities' },
-  { id: 9, name: 'Aman', category: 'Personal Development' },
-  { id: 10, name: 'Vrushab. M', category: 'SEO & Marketing' },
-  { id: 11, name: 'Robert William', category: 'Office Productivity' },
-  { id: 12, name: 'Soman', category: 'Web Development' },
-];
+const MENTORS = ALL_MENTORS;
 
 export default function TopMentorsScreen() {
   const router = useRouter();
@@ -52,6 +40,7 @@ export default function TopMentorsScreen() {
                 key={item.id}
                 name={item.name}
                 category={item.category}
+                image={item.avatar}
                 onPress={() => onMentorPress?.(item.id)}
               />
             </TouchableOpacity>

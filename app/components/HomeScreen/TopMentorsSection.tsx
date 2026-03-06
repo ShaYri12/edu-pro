@@ -3,18 +3,9 @@ import { View, ScrollView } from 'react-native';
 import SectionHeader from './SectionHeader';
 import MentorCard from '../MentorCard';
 import { useRouter } from 'expo-router';
+import { getTopMentors } from '@/constants/courses';
 
-const MENTORS = [
-  { id: 1, name: 'Jiya' },
-  { id: 2, name: 'Aman' },
-  { id: 3, name: 'Rahul J' },
-  { id: 4, name: 'Manav' },
-  { id: 5, name: 'Vrushab. M' },
-  { id: 6, name: 'Robert William' },
-  { id: 7, name: 'Soman' },
-  { id: 8, name: 'Manav' },
-  { id: 9, name: 'Vrushab. M' },
-];
+const MENTORS = getTopMentors(9);
 
 interface TopMentorsSectionProps {
   onSeeAll?: () => void;
@@ -43,6 +34,7 @@ export default function TopMentorsSection({
           <MentorCard
             key={mentor.id}
             name={mentor.name}
+            image={mentor.avatar}
             onPress={() => onMentorPress?.(mentor.id)}
           />
         ))}

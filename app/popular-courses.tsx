@@ -4,20 +4,16 @@ import { ArrowLeft } from 'lucide-react-native';
 import CategoryPill from './components/HomeScreen/CategoryPill';
 import CourseCard from './components/CourseCard';
 import { useRouter } from 'expo-router';
-import { courses as ALL_COURSES } from '@/constants/courses';
+import { listCoursesByCategory } from '@/constants/courses';
 
-const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & I'];
+const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & Humanities', 'Web Development', 'SEO & Marketing', 'Finance & Accounting', 'Personal Development', 'Office Productivity', 'HR Management'];
 
-// Use centralized courses data
-const COURSES = ALL_COURSES;
+// Data is sourced from centralized courses module via helpers
 
 export default function PopularCoursesRoute() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const filtered = useMemo(() => {
-    if (selectedCategory === 'All') return COURSES;
-    return COURSES.filter((c) => c.category === selectedCategory);
-  }, [selectedCategory]);
+  const filtered = useMemo(() => listCoursesByCategory(selectedCategory), [selectedCategory]);
 
   return (
     <ScrollView
@@ -63,6 +59,7 @@ export default function PopularCoursesRoute() {
             reviews={course.reviews}
             price={`${course.price}/-`}
             students={`${course.students}`}
+            image={course.image}
             variant="list"
             onPress={() => router.push({ pathname: '/course', params: { id: String(course.id) } })}
           />

@@ -59,7 +59,7 @@ export const courses: Course[] = [
     students: 7830,
     image: require('../assets/images/graphic-design.jpg'),
     description:
-      'Graphic Design is now a popular profession. Learn core design principles, typography, color theory, and composition with hands-on projects designed to build a strong portfolio.',
+      'Graphic Design is now a popular profession that combines creativity with technical skills to communicate ideas visually. This field has evolved significantly with digital transformation and offers numerous career opportunities.\n\nIn this comprehensive course, you will learn core design principles, typography, color theory, and composition through hands-on projects designed to build a strong portfolio. We cover everything from basic design fundamentals to advanced techniques used by industry professionals. You will explore various design software including Adobe Creative Suite, Figma, and other industry-standard tools.\n\nYou will master industry-standard software tools, understand client requirements, and develop your unique design style. The course includes practical exercises in logo design, branding, web design, print media, and digital marketing materials. By the end of this course, you will have created multiple portfolio pieces and gained the confidence to work as a professional graphic designer.\n\nWhether you are a complete beginner or looking to enhance your existing skills, this course provides structured learning with practical assignments and real-world projects. We also cover freelancing tips, client communication, pricing strategies, and building a successful design business.\n\nThe course is designed with flexibility in mind, allowing you to learn at your own pace while providing comprehensive support through our community forums and direct instructor feedback. You will also receive lifetime access to course updates and new content as the design industry evolves.\n\nUpon completion, you will receive a certificate of completion and have access to our job placement assistance program, connecting you with potential employers and freelance opportunities in the graphic design industry.',
     curriculum: [
       'Intro to Design Principles',
       'Typography Basics',
@@ -101,6 +101,123 @@ export const courses: Course[] = [
           'Great structure and practical assignments. It had fun sessions as well.',
         likes: 578,
         timeAgo: '2 Weeks Ago',
+      },
+      {
+        id: 'r-1-3',
+        user: 'James Rodriguez',
+        rating: 4.8,
+        text:
+          'Outstanding course! The instructor explains complex concepts in a very understandable way. The projects helped me build a solid portfolio.',
+        likes: 892,
+        timeAgo: '1 Week Ago',
+      },
+      {
+        id: 'r-1-4',
+        user: 'Sarah Chen',
+        rating: 4.3,
+        text:
+          'Really enjoyed the hands-on approach. The feedback on assignments was detailed and helpful for improvement.',
+        likes: 445,
+        timeAgo: '3 Days Ago',
+      },
+      {
+        id: 'r-1-5',
+        user: 'Michael Johnson',
+        rating: 4.7,
+        text:
+          'Perfect for beginners! Started with zero knowledge and now I feel confident creating professional designs. Highly recommend!',
+        likes: 623,
+        timeAgo: '5 Days Ago',
+      },
+      {
+        id: 'r-1-6',
+        user: 'Emily Davis',
+        rating: 4.2,
+        text:
+          'Good course overall. The typography section was particularly well done. Would love to see more advanced color theory content.',
+        likes: 234,
+        timeAgo: '1 Month Ago',
+      },
+      {
+        id: 'r-1-7',
+        user: 'David Wilson',
+        rating: 4.6,
+        text:
+          'Excellent value for money. The course covers everything you need to get started in graphic design. The community support is also great.',
+        likes: 567,
+        timeAgo: '2 Months Ago',
+      },
+      {
+        id: 'r-1-8',
+        user: 'Lisa Anderson',
+        rating: 4.4,
+        text:
+          'Very comprehensive course. I appreciate the real-world examples and case studies. The instructor is knowledgeable and engaging.',
+        likes: 389,
+        timeAgo: '3 Weeks Ago',
+      },
+      {
+        id: 'r-1-9',
+        user: 'Robert Taylor',
+        rating: 4.9,
+        text:
+          'This course exceeded my expectations! The step-by-step approach made learning enjoyable. Already landed my first freelance project!',
+        likes: 756,
+        timeAgo: '4 Days Ago',
+      },
+      {
+        id: 'r-1-10',
+        user: 'Jennifer Brown',
+        rating: 4.1,
+        text:
+          'Solid foundation course. The assignments are challenging but doable. Great for building confidence in design skills.',
+        likes: 298,
+        timeAgo: '6 Days Ago',
+      },
+      {
+        id: 'r-1-11',
+        user: 'Alex Thompson',
+        rating: 4.8,
+        text:
+          'Amazing course! The instructor breaks down complex design concepts into easy-to-understand lessons. The portfolio projects were incredibly valuable.',
+        likes: 672,
+        timeAgo: '1 Day Ago',
+      },
+      {
+        id: 'r-1-12',
+        user: 'Maria Garcia',
+        rating: 4.4,
+        text:
+          'Great learning experience. The course structure is well organized and the feedback system is excellent. Learned so much about color theory and typography.',
+        likes: 423,
+        timeAgo: '2 Days Ago',
+      },
+      {
+        id: 'r-1-13',
+        user: 'Kevin Lee',
+        rating: 4.6,
+        text:
+          'Highly recommend this course! The practical exercises really helped me understand design principles. Already using these skills in my current job.',
+        likes: 534,
+        timeAgo: '1 Week Ago',
+      },
+      {
+        id: 'r-1-14',
+        user: 'Rachel Martinez',
+        rating: 4.3,
+        text:
+          'Excellent course content and presentation. The instructor is very knowledgeable and provides clear explanations. The community support is also fantastic.',
+        likes: 367,
+        timeAgo: '4 Days Ago',
+      },
+      {
+        id: 'r-1-15',
+        user: 'Daniel Kim',
+        rating: 4.7,
+        text:
+          'This course transformed my design skills completely. From a complete beginner to creating professional-level designs. The step-by-step approach is perfect.',
+        likes: 689,
+        timeAgo: '3 Days Ago',
       },
     ],
   },

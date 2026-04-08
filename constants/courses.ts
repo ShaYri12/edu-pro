@@ -533,10 +533,9 @@ export function getCoursesByMentorId(mentorId: number): Course[] {
 }
 
 export function getTopMentors(limit: number = 9): Mentor[] {
-  // Sort mentors by total students across their courses (fallback to course students via id match)
-  const byId = new Map(courses.map((c) => [c.id, c.students]));
+  // Sort mentors by their totalStudents property
   return [...mentors]
-    .sort((a, b) => (byId.get(b.id) || 0) - (byId.get(a.id) || 0))
+    .sort((a, b) => b.totalStudents - a.totalStudents)
     .slice(0, limit);
 }
 

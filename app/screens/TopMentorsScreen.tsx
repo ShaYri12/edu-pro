@@ -16,7 +16,7 @@ export default function TopMentorsScreen() {
 
   return (
     <View className="flex-1 bg-[#F5F9FF]">
-      <View className="p-8 flex-1">
+      <View className="p-6 flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between mb-[10px]">
           <View className="flex-row items-center">

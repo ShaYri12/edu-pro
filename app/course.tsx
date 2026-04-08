@@ -17,8 +17,8 @@ import {
   BadgeCheck,
   MessageCircle,
   Play,
-  X,
   Heart,
+  ArrowRight,
 } from "lucide-react-native";
 import { getCourseById } from "@/constants/courses";
 
@@ -29,10 +29,11 @@ export default function CourseDetailRoute() {
   const [activeTab, setActiveTab] = useState<"About" | "Curriculum">("About");
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [reviewFilter, setReviewFilter] = useState<"All" | "Excellent" | "Good" | "Average" | "Below Average">("All");
 
   if (!course) {
     return (
-      <View className="flex-1 bg-[#F5F9FF] p-8">
+      <View className="flex-1 bg-[#F5F9FF] p-6">
         <TouchableOpacity
           onPress={() => router.back()}
           activeOpacity={0.7}
@@ -46,6 +47,26 @@ export default function CourseDetailRoute() {
       </View>
     );
   }
+
+  // Helper function to filter reviews based on rating
+  const getFilteredReviews = () => {
+    if (!course) return [];
+    
+    switch (reviewFilter) {
+      case "Excellent":
+        return course.reviewsList.filter(r => r.rating >= 4.5);
+      case "Good":
+        return course.reviewsList.filter(r => r.rating >= 3.5 && r.rating < 4.5);
+      case "Average":
+        return course.reviewsList.filter(r => r.rating >= 2.5 && r.rating < 3.5);
+      case "Below Average":
+        return course.reviewsList.filter(r => r.rating < 2.5);
+      default:
+        return course.reviewsList;
+    }
+  };
+
+  const filteredReviews = getFilteredReviews();
 
   // Helper function to get truncated description with multiple paragraphs
   const getTruncatedDescription = (text: string, wordLimit: number = 30) => {
@@ -449,7 +470,7 @@ export default function CourseDetailRoute() {
                     </Text>
                     <View className="flex-row items-center gap-5">
                       <Text className="text-[12px] font-mulish-extrabold text-dark-blue flex flex-row items-center gap-2">
-                        <Heart size={18} color="#DD2E44" /> {r.likes}
+                        <Heart size={18} fill="#DD2E44" color="#DD2E44" /> {r.likes}
                       </Text>
                       <Text className="text-[12px] font-extrabold text-dark-blue">
                         {r.timeAgo}
@@ -467,11 +488,15 @@ export default function CourseDetailRoute() {
       <View className="absolute left-0 right-0 bottom-0 px-8 py-4 bg-transparent">
         <TouchableOpacity
           activeOpacity={0.8}
-          className="bg-primary rounded-full py-4 items-center"
+          className="relative flex-row items-center justify-center bg-primary rounded-full px-6 py-4"
         >
-          <Text className="text-white font-jost-semibold">
+          <Text className="text-[17px] text-white font-jost-semibold">
             Enroll Course - {course.price}/-
           </Text>
+
+          <View style={{right: 8}} className="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full items-center justify-center">
+            <ArrowRight size={18} color="#0961F5" />
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -484,63 +509,145 @@ export default function CourseDetailRoute() {
       >
         <View className="flex-1 bg-[#F5F9FF]">
           {/* Modal Header */}
-          <View className="flex-row items-center justify-between px-6 py-4 bg-white border-b border-[#E5E7EB]">
-            <Text className="text-[18px] font-jost-semibold text-dark-blue">
-              All Reviews
-            </Text>
+          <View className="flex-row items-center gap-2.5 px-6 pt-6 bg-white">
             <TouchableOpacity
               onPress={() => setShowAllReviews(false)}
               activeOpacity={0.7}
-              className="w-8 h-8 rounded-full bg-[#F3F4F6] items-center justify-center"
             >
-              <X size={18} color="#6B7280" />
+              <ArrowLeft size={24} color="#0B1354" />
             </TouchableOpacity>
+            <Text className="text-[18px] font-jost-semibold text-dark-blue">
+              Reviews
+            </Text>
+          </View>
+
+          {/* Rating Summary */}
+          <View className="bg-white px-6 pb-5 items-center">
+            <Text className="text-[38px] font-jost-semibold text-dark-blue">
+              {course.rating.toFixed(1)}
+            </Text>
+            <View className="flex-row items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star 
+                  key={star} 
+                  size={20} 
+                  color="#FAC025" 
+                  fill={star <= Math.floor(course.rating) ? "#FAC025" : "transparent"} 
+                />
+              ))}
+            </View>
+            <Text className="text-[13px] text-[#545454] mt-1">
+              Based on {filteredReviews.length} {reviewFilter === "All" ? "" : reviewFilter} Reviews
+            </Text>
+          </View>
+
+          {/* Filter Tabs */}
+          <View className="bg-white px-6">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View className="flex-row gap-2.5">
+                {["All", "Excellent", "Good", "Average", "Below Average"].map((filter) => (
+                  <TouchableOpacity
+                    key={filter}
+                    onPress={() => setReviewFilter(filter as any)}
+                    activeOpacity={0.7}
+                    className={`px-[18px] py-1.5 rounded-full ${
+                      reviewFilter === filter 
+                        ? "bg-[#167F71]" 
+                        : "bg-[#E8F1FF]"
+                    }`}
+                  >
+                    <Text className={`text-[13px] ${
+                      reviewFilter === filter 
+                        ? "text-white" 
+                        : "text-dark-blue"
+                    }`}>
+                      {filter}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
           </View>
 
           {/* Reviews List */}
           <ScrollView
-            className="flex-1 px-6 py-4"
+            className="flex-1 px-6 py-5"
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
+            contentContainerStyle={{ paddingBottom: 100 }}
           >
             <View className="gap-4">
-              {course.reviewsList.map((r) => (
-                <View
-                  key={r.id}
-                  className="bg-white rounded-2xl p-4"
-                  style={{ boxShadow: "0px 4px 10px 0px #00000014" }}
-                >
-                  <View className="flex-row items-start justify-between">
-                    <View className="flex-row items-center gap-3">
-                      <View className="w-[44px] h-[44px] rounded-full bg-black" />
-                      <View>
-                        <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                          {r.user}
-                        </Text>
-                        <View className="flex-row items-center gap-1 mt-1">
-                          <Star size={14} color="#FAC025" fill="#FAC025" />
-                          <Text className="text-[12px] text-dark-blue font-mulish-extrabold">
-                            {r.rating.toFixed(1)}
+              {filteredReviews.length > 0 ? (
+                filteredReviews.map((r) => (
+                  <View
+                    key={r.id}
+                    className="bg-white rounded-2xl p-4"
+                    style={{ boxShadow: "0px 4px 10px 0px #00000014" }}
+                  >
+                    <View className="flex-row items-start justify-between mb-3">
+                      <View className="flex-row items-center gap-3 flex-1">
+                        <View className="w-[44px] h-[44px] rounded-full bg-black" />
+                        <View className="flex-1">
+                          <Text className="text-[16px] font-jost-semibold text-dark-blue">
+                            {r.user}
                           </Text>
                         </View>
                       </View>
+                      <View className="flex-row items-center gap-[2px] border-2 border-primary px-3 py-[5px] rounded-full bg-[#E8F1FF]">
+                        <Star size={12} color="#FAC025" fill="#FAC025" />
+                        <Text className="text-[13px] text-dark-blue font-jost-semibold">
+                          {r.rating.toFixed(1)}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    <Text className="text-[13px] text-[#545454] mb-4">
+                      {r.text}
+                    </Text>
+                    
+                    <View className="flex-row items-center gap-6">
+                      <View className="flex-row items-center gap-2">
+                        <Heart size={16} fill="#DD2E44" color="#DD2E44" />
+                        <Text className="text-[12px] font-mulish-extralight text-dark-blue">
+                          {r.likes}
+                        </Text>
+                      </View>
+                      <Text className="text-[12px] font-mulish-extralight text-dark-blue">
+                        {r.timeAgo}
+                      </Text>
                     </View>
                   </View>
-                  <Text className="text-[14px] text-light-gray mt-3 mb-4 leading-5">
-                    {r.text}
+                ))
+              ) : (
+                <View className="items-center py-12">
+                  <Text className="text-[16px] text-[#6B7280] text-center">
+                    No reviews found for "{reviewFilter}" filter
                   </Text>
-                  <View className="flex-row items-center gap-4">
-                    <Text className="text-[12px] text-light-gray">
-                      ❤ {r.likes}
-                    </Text>
-                    <Text className="text-[12px] text-light-gray">
-                      {r.timeAgo}
-                    </Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => setReviewFilter("All")}
+                    activeOpacity={0.7}
+                    className="mt-4 bg-primary px-6 py-2 rounded-full"
+                  >
+                    <Text className="text-white font-jost-semibold">Show All Reviews</Text>
+                  </TouchableOpacity>
                 </View>
-              ))}
+              )}
             </View>
           </ScrollView>
+
+          {/* Write Review Button */}
+          <View className="absolute bottom-6 left-6 right-6">
+            <TouchableOpacity
+              activeOpacity={0.8}
+              className="relative bg-primary rounded-full py-4 flex-row items-center justify-center gap-3"
+            >
+              <Text className="text-[17px] text-white font-jost-semibold">
+                Write a Review
+              </Text>
+              <View style={{right: 8}} className="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full items-center justify-center">
+                <ArrowRight size={18} color="#0961F5" />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>

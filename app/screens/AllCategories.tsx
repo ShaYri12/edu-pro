@@ -24,7 +24,7 @@ export default function AllCategories({ onBack }: AllCategoriesProps) {
   return (
     <View className="flex-1 bg-[#F5F9FF]">
       <ScrollView
-        className="p-8"
+        className="p-6"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 60 }}
       >

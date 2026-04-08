@@ -90,7 +90,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-[#F5F9FF] p-8"
+      className="flex-1 bg-[#F5F9FF] p-6"
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
     >

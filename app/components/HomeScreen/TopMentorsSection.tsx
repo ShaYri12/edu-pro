@@ -17,13 +17,14 @@ export default function TopMentorsSection({
   onMentorPress,
 }: TopMentorsSectionProps) {
   const router = useRouter();
+  
   const handleSeeAll = () => {
     if (onSeeAll) return onSeeAll();
     router.push('/top-mentors');
   };
 
   const handleMentorPress = (mentorId: number) => {
-    if (onMentorPress) return onMentorPress(mentorId);
+    // Always navigate directly to ensure it works
     router.push(`/mentor?id=${mentorId}`);
   };
 
@@ -32,7 +33,7 @@ export default function TopMentorsSection({
       <SectionHeader title="Top Mentor" onSeeAll={handleSeeAll} />
       <ScrollView
         horizontal
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ marginTop: 15, gap: 18 }}
         scrollEventThrottle={16}
       >

@@ -26,6 +26,12 @@ export interface Mentor {
   category: string;
   avatar?: ImageSourcePropType;
   verified?: boolean;
+  bio?: string;
+  totalCourses: number;
+  totalStudents: number;
+  totalRatings: number;
+  averageRating: number;
+  company?: string;
 }
 
 export interface CourseFeature {
@@ -437,21 +443,94 @@ export function searchCourses(query: string): Course[] {
   );
 }
 
-// Mentors derived from course instructors to keep a single source of truth
-export const mentors: Mentor[] = Array.from(
-  new Map(
-    courses.map((c) => [
-      `${c.instructor.name}__${c.instructor.title}`,
-      {
-        id: c.id,
-        name: c.instructor.name,
-        category: c.instructor.title,
-        avatar: c.instructor.avatar,
-        verified: c.instructor.verified,
-      } as Mentor,
-    ])
-  ).values()
-);
+// Enhanced mentors with detailed information
+export const mentors: Mentor[] = [
+  {
+    id: 1,
+    name: 'Mary Jones',
+    category: 'Graphic Designer',
+    company: 'Google',
+    avatar: require('../assets/images/avatar-1.jpg'),
+    verified: true,
+    bio: 'But how much, or rather, can it now do as much as it did then? Nor am I unaware that there is utility in history, not only pleasure.',
+    totalCourses: 26,
+    totalStudents: 15800,
+    totalRatings: 8750,
+    averageRating: 4.2,
+  },
+  {
+    id: 2,
+    name: 'Robert jr',
+    category: 'Graphic Design',
+    avatar: require('../assets/images/avatar-1.jpg'),
+    verified: true,
+    bio: 'Experienced graphic designer with over 10 years in the industry. Passionate about teaching design fundamentals and helping students build strong portfolios.',
+    totalCourses: 12,
+    totalStudents: 7830,
+    totalRatings: 4200,
+    averageRating: 4.2,
+  },
+  {
+    id: 3,
+    name: 'Elena Brooks',
+    category: 'Art Director',
+    avatar: require('../assets/images/avatar-2.jpg'),
+    verified: true,
+    bio: 'Creative director specializing in advertisement design and brand strategy. Former creative lead at top advertising agencies.',
+    totalCourses: 8,
+    totalStudents: 12680,
+    totalRatings: 6340,
+    averageRating: 3.9,
+  },
+  {
+    id: 4,
+    name: 'Chris Nolan',
+    category: '3D Generalist',
+    avatar: require('../assets/images/avatar-3.jpeg'),
+    verified: true,
+    bio: '3D artist and technical director with expertise in modeling, animation, and rendering. Worked on major film and game projects.',
+    totalCourses: 15,
+    totalStudents: 4010,
+    totalRatings: 2890,
+    averageRating: 4.3,
+  },
+  {
+    id: 5,
+    name: 'Alex Kim',
+    category: 'Frontend Engineer',
+    avatar: require('../assets/images/avatar-2.jpg'),
+    verified: true,
+    bio: 'Full-stack developer with focus on modern web technologies. Passionate about clean code and user experience design.',
+    totalCourses: 18,
+    totalStudents: 9450,
+    totalRatings: 5670,
+    averageRating: 4.6,
+  },
+  {
+    id: 6,
+    name: 'Dana Scott',
+    category: 'Marketing Strategist',
+    avatar: require('../assets/images/avatar-5.jpg'),
+    verified: false,
+    bio: 'Digital marketing expert with proven track record in campaign strategy and analytics. Helps businesses grow through data-driven marketing.',
+    totalCourses: 10,
+    totalStudents: 4020,
+    totalRatings: 2010,
+    averageRating: 4.1,
+  },
+];
+
+export function getMentorById(id: number | string): Mentor | undefined {
+  const num = typeof id === 'string' ? parseInt(id, 10) : id;
+  return mentors.find((m) => m.id === num);
+}
+
+export function getCoursesByMentorId(mentorId: number): Course[] {
+  return courses.filter((course) => {
+    const mentor = mentors.find(m => m.id === mentorId);
+    return mentor && course.instructor.name === mentor.name;
+  });
+}
 
 export function getTopMentors(limit: number = 9): Mentor[] {
   // Sort mentors by total students across their courses (fallback to course students via id match)

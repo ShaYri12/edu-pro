@@ -21,6 +21,12 @@ export default function TopMentorsSection({
     if (onSeeAll) return onSeeAll();
     router.push('/top-mentors');
   };
+
+  const handleMentorPress = (mentorId: number) => {
+    if (onMentorPress) return onMentorPress(mentorId);
+    router.push(`/mentor?id=${mentorId}`);
+  };
+
   return (
     <View>
       <SectionHeader title="Top Mentor" onSeeAll={handleSeeAll} />
@@ -35,7 +41,7 @@ export default function TopMentorsSection({
             key={mentor.id}
             name={mentor.name}
             image={mentor.avatar}
-            onPress={() => onMentorPress?.(mentor.id)}
+            onPress={() => handleMentorPress(mentor.id)}
           />
         ))}
       </ScrollView>

@@ -11,6 +11,7 @@ export default function TopMentorsScreen() {
   const router = useRouter();
   const onMentorPress = (mentorId: number) => {
     console.log('[v0] Mentor selected:', mentorId);
+    router.push(`/mentor?id=${mentorId}`);
   };
 
   return (
@@ -41,7 +42,7 @@ export default function TopMentorsScreen() {
                 name={item.name}
                 category={item.category}
                 image={item.avatar}
-                onPress={() => onMentorPress?.(item.id)}
+                onPress={() => onMentorPress(item.id)}
               />
             </TouchableOpacity>
           )}

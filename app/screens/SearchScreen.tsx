@@ -210,7 +210,13 @@ export default function SearchScreen() {
                 )
                 : (
                   filteredMentors.map((m) => (
-                    <MentorCard key={m.id} name={m.name} category={m.category} image={m.avatar} onPress={() => {}} />
+                    <MentorCard 
+                      key={m.id} 
+                      name={m.name} 
+                      category={m.category} 
+                      image={m.avatar} 
+                      onPress={() => router.push(`/mentor?id=${m.id}`)} 
+                    />
                   ))
                 )}
             </View>

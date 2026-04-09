@@ -28,8 +28,8 @@ export default function TabLayout() {
           height: Platform.OS === "ios" ? 88 : 68,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: "600",
+          fontSize: 9,
+          fontWeight: "800",
           marginTop: 4,
         },
       }}
@@ -38,7 +38,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "HOME",
-          tabBarIcon: ({ color }) => <HomeIcon color={color} size={22} />,
+          tabBarIcon: ({ color }) => <HomeIcon color={color} size={20} />,
         }}
       />
 
@@ -46,7 +46,7 @@ export default function TabLayout() {
         name="my-courses"
         options={{
           title: "MY COURSES",
-          tabBarIcon: ({ color }) => <CoursesIcon color={color} size={22} />,
+          tabBarIcon: ({ color }) => <CoursesIcon color={color} size={20} />,
         }}
       />
 
@@ -54,7 +54,7 @@ export default function TabLayout() {
         name="inbox"
         options={{
           title: "INBOX",
-          tabBarIcon: ({ color }) => <IndexIcon color={color} size={22} />,
+          tabBarIcon: ({ color }) => <IndexIcon color={color} size={20} />,
         }}
       />
 
@@ -63,7 +63,7 @@ export default function TabLayout() {
         options={{
           title: "TRANSACTION",
           tabBarIcon: ({ color }) => (
-            <TransactionIcon color={color} size={22} />
+            <TransactionIcon color={color} size={20} />
           ),
         }}
       />
@@ -72,7 +72,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "PROFILE",
-          tabBarIcon: ({ color }) => <ProfileIcon color={color} size={22} />,
+          tabBarIcon: ({ color }) => <ProfileIcon color={color} size={20} />,
         }}
       />
     </Tabs>

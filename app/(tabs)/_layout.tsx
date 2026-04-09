@@ -3,65 +3,76 @@ import React from "react";
 import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+
+// Import custom SVG icons
+import HomeIcon from "@/components/SVGs/Home";
+import CoursesIcon from "@/components/SVGs/Courses";
+import IndexIcon from "@/components/SVGs/Index";
+import TransactionIcon from "@/components/SVGs/Transaction";
+import ProfileIcon from "@/components/SVGs/Profile";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "#167F71", // Green color for active tab
+        tabBarInactiveTintColor: "#202244", // Dark color for inactive tabs
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: "#FFFFFF", // White background
+          borderTopWidth: 1,
+          borderTopColor: "#E5E7EB",
+          paddingTop: 8,
+          paddingBottom: Platform.OS === "ios" ? 20 : 8,
+          height: Platform.OS === "ios" ? 88 : 68,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: "600",
+          marginTop: 4,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "HOME",
+          tabBarIcon: ({ color }) => <HomeIcon color={color} size={22} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="my-courses"
+        options={{
+          title: "MY COURSES",
+          tabBarIcon: ({ color }) => <CoursesIcon color={color} size={22} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="inbox"
+        options={{
+          title: "INBOX",
+          tabBarIcon: ({ color }) => <IndexIcon color={color} size={22} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="transaction"
+        options={{
+          title: "TRANSACTION",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={22} name="house.fill" color={color} />
+            <TransactionIcon color={color} size={22} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="menu-demo"
+        name="profile"
         options={{
-          title: "Menu",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={22} name="menucard" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="permissions-demo"
-        options={{
-          title: "Permissions",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={22} name="checkmark.shield.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="error-demo"
-        options={{
-          title: "Errors",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={22} name="exclamationmark.triangle.fill" color={color} />
-          ),
+          title: "PROFILE",
+          tabBarIcon: ({ color }) => <ProfileIcon color={color} size={22} />,
         }}
       />
     </Tabs>

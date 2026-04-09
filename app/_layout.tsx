@@ -68,15 +68,14 @@ export default function RootLayout() {
         <BottomSheetModalProvider>
           <UIThemeProvider>
             <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <Stack initialRouteName="index">
+              <Stack initialRouteName="(tabs)">
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="mentor" options={{ headerShown: false }} />
                 <Stack.Screen name="course" options={{ headerShown: false }} />
                 <Stack.Screen name="popular-courses" options={{ headerShown: false }} />
                 <Stack.Screen name="top-mentors" options={{ headerShown: false }} />
                 <Stack.Screen name="search" options={{ headerShown: false }} />
                 <Stack.Screen name="all-categories" options={{ headerShown: false }} />
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />

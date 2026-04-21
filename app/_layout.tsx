@@ -18,7 +18,6 @@ import {
   Text as RNText,
   TextInput as RNTextInput,
   Platform,
-  View,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -76,36 +75,19 @@ export default function RootLayout() {
 
       // Configure system UI for better visibility
       configureSystemUI();
-      
+
       // Configure navigation bar color (Android system buttons at bottom)
-      if (Platform.OS === 'android') {
-        // Set navigation bar to WHITE background with DARK/BLACK buttons
-        
-        // Method 1: expo-navigation-bar with correct dark button style
-        NavigationBar.setBackgroundColorAsync('#FFFFFF')
+      if (Platform.OS === "android") {
+        // Set navigation bar to WHITE background with DARK buttons
+        NavigationBar.setBackgroundColorAsync("#FFFFFF")
           .then(() => {
-            // Try different ways to set dark buttons
-            return NavigationBar.setButtonStyleAsync('dark-content');
-          })
-          .then(() => {
-            console.log('✅ Navigation bar: WHITE background + DARK buttons (dark-content)');
+            return NavigationBar.setButtonStyleAsync("dark");
           })
           .catch(() => {
-            // Try alternative button style
-            NavigationBar.setButtonStyleAsync('dark')
-              .then(() => {
-                console.log('✅ Navigation bar: WHITE background + DARK buttons (dark)');
-              })
-              .catch(() => {
-                // Try expo-system-ui approach
-                SystemUI.setBackgroundColorAsync('#FFFFFF')
-                  .then(() => {
-                    console.log('✅ Navigation bar: WHITE background via expo-system-ui');
-                  })
-                  .catch(() => {
-                    console.log('❌ All navigation bar methods failed - Expo Go limitation');
-                  });
-              });
+            // Fallback to expo-system-ui
+            SystemUI.setBackgroundColorAsync("#FFFFFF").catch(() => {
+              // Silent fallback - will work in development builds
+            });
           });
       }
     }

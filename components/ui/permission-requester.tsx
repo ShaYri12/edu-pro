@@ -3,12 +3,22 @@ import { Platform, Linking } from "react-native";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as Contacts from "expo-contacts";
-import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./dialog";
 import { Button } from "./button";
 import { Text } from "./text";
 import { AlertCircle, Camera as CameraIcon, MapPin, Image, Users, Bell } from "lucide-react-native";
 import { iconWithClassName } from "./lib/icons/icon-with-classname";
+
+// Conditionally import notifications only if not in Expo Go
+let Notifications: any = null;
+if (!Constants.appOwnership || Constants.appOwnership !== 'expo') {
+  try {
+    Notifications = require("expo-notifications");
+  } catch (error) {
+    console.warn("expo-notifications not available in this environment");
+  }
+}
 
 const AlertCircleIcon = iconWithClassName(AlertCircle);
 const CameraIconStyled = iconWithClassName(CameraIcon);
@@ -102,7 +112,13 @@ export function PermissionRequester({
       } else if (permission === "contacts") {
         permissionStatus = await Contacts.getPermissionsAsync();
       } else if (permission === "notifications") {
-        permissionStatus = await Notifications.getPermissionsAsync();
+        if (Notifications) {
+          permissionStatus = await Notifications.getPermissionsAsync();
+        } else {
+          // In Expo Go, just return granted to avoid errors
+          setStatus("granted");
+          return;
+        }
       }
       
       if (permissionStatus) {
@@ -144,7 +160,14 @@ export function PermissionRequester({
       } else if (permission === "contacts") {
         permissionResult = await Contacts.requestPermissionsAsync();
       } else if (permission === "notifications") {
-        permissionResult = await Notifications.requestPermissionsAsync();
+        if (Notifications) {
+          permissionResult = await Notifications.requestPermissionsAsync();
+        } else {
+          // In Expo Go, just simulate granted
+          setStatus("granted");
+          onPermissionGranted?.();
+          return;
+        }
       }
       
       if (permissionResult) {
@@ -224,7 +247,13 @@ export function usePermission(permission: PermissionType) {
       } else if (permission === "contacts") {
         permissionStatus = await Contacts.getPermissionsAsync();
       } else if (permission === "notifications") {
-        permissionStatus = await Notifications.getPermissionsAsync();
+        if (Notifications) {
+          permissionStatus = await Notifications.getPermissionsAsync();
+        } else {
+          // In Expo Go, just set granted
+          setStatus("granted");
+          return;
+        }
       }
       
       if (permissionStatus) {
@@ -256,7 +285,13 @@ export function usePermission(permission: PermissionType) {
       } else if (permission === "contacts") {
         permissionResult = await Contacts.requestPermissionsAsync();
       } else if (permission === "notifications") {
-        permissionResult = await Notifications.requestPermissionsAsync();
+        if (Notifications) {
+          permissionResult = await Notifications.requestPermissionsAsync();
+        } else {
+          // In Expo Go, just return true
+          setStatus("granted");
+          return true;
+        }
       }
       
       if (permissionResult) {

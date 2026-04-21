@@ -7,22 +7,22 @@ export interface FlatListProps<ItemT> extends RNFlatListProps<ItemT> {
   contentContainerClassName?: string;
 }
 
-// Using a function component instead of forwardRef due to generic constraints
+// Using a function component with proper forwardRef implementation
 function FlatListInner<ItemT>(
-  props: FlatListProps<ItemT> & { forwardedRef?: React.Ref<RNFlatList<ItemT>> }
+  props: FlatListProps<ItemT>,
+  ref: React.Ref<RNFlatList<ItemT>>
 ) {
   const { 
     className, 
     contentContainerClassName,
     contentContainerStyle,
     style,
-    forwardedRef,
     ...rest 
   } = props;
 
   return (
     <RNFlatList
-      ref={forwardedRef}
+      ref={ref}
       className={cn(className)}
       contentContainerClassName={cn(contentContainerClassName)}
       contentContainerStyle={contentContainerStyle}

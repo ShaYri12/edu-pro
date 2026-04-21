@@ -12,6 +12,7 @@ export * from "./label";
 export * from "./permission-requester";
 export * from "./pressable";
 export * from "./safe-area-view";
+export * from "./screen-wrapper";
 export * from "./scroll-view";
 export * from "./select";
 export * from "./sheet";

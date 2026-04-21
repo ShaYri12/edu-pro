@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { ScrollView, View, useWindowDimensions, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/HomeScreen/Header';
 import SearchBar from '../components/SearchBar';
 import CategoriesSection from '../components/HomeScreen/CategoriesSection';
@@ -89,11 +90,13 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView
-      className="flex-1 bg-[#F5F9FF] p-6"
-      showsVerticalScrollIndicator={false}
-      scrollEventThrottle={16}
-    >
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
+      <ScrollView
+        className="flex-1 p-6"
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
       <Header userName="ALEX" onBellPress={handleBellPress} />
 
       <SearchBar
@@ -173,5 +176,6 @@ export default function HomeScreen() {
         onMentorPress={handleMentorPress}
       />
     </ScrollView>
+  </SafeAreaView>
   );
 }

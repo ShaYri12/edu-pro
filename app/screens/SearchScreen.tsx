@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { View, Text, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ArrowLeft, X, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
@@ -88,7 +89,7 @@ export default function SearchScreen() {
   }, [history, showAll, query, committedQuery]);
 
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <ScrollView
         className="flex-1 px-8 py-8"
         showsVerticalScrollIndicator={false}
@@ -223,6 +224,6 @@ export default function SearchScreen() {
           </>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

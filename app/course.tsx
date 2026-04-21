@@ -7,6 +7,7 @@ import {
   Image,
   Modal,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowLeft,
@@ -33,18 +34,20 @@ export default function CourseDetailRoute() {
 
   if (!course) {
     return (
-      <View className="flex-1 bg-[#F5F9FF] p-6">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-          className="mb-4"
-        >
-          <ArrowLeft size={24} color="#0B1354" />
-        </TouchableOpacity>
-        <Text className="text-dark-blue font-jost-semibold text-[18px]">
-          Course not found
-        </Text>
-      </View>
+      <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
+        <View className="p-6">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+            className="mb-4"
+          >
+            <ArrowLeft size={24} color="#0B1354" />
+          </TouchableOpacity>
+          <Text className="text-dark-blue font-jost-semibold text-[18px]">
+            Course not found
+          </Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -166,7 +169,7 @@ export default function CourseDetailRoute() {
   };
 
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -183,15 +186,15 @@ export default function CourseDetailRoute() {
           ) : null}
 
           {/* Back button overlay */}
-          <View className="absolute left-4 top-10">
+          <SafeAreaView className="absolute left-4 top-0" edges={['top']}>
             <TouchableOpacity
               onPress={() => router.back()}
               activeOpacity={0.8}
-              className="w-10 h-10 rounded-full bg-white/90 items-center justify-center"
+              className="w-10 h-10 rounded-full bg-white/90 items-center justify-center mt-2"
             >
               <ArrowLeft size={22} color="#0B1354" />
             </TouchableOpacity>
-          </View>
+          </SafeAreaView>
         </View>
         <View className="px-8">
           {/* Floating course card */}
@@ -507,7 +510,7 @@ export default function CourseDetailRoute() {
         presentationStyle="pageSheet"
         onRequestClose={() => setShowAllReviews(false)}
       >
-        <View className="flex-1 bg-[#F5F9FF]">
+        <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
           {/* Modal Header */}
           <View className="flex-row items-center gap-2.5 px-6 pt-6 bg-white">
             <TouchableOpacity
@@ -648,8 +651,8 @@ export default function CourseDetailRoute() {
               </View>
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }

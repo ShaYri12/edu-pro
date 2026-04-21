@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchBar from '../components/SearchBar';
 import { ArrowLeft } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
@@ -22,11 +23,11 @@ interface AllCategoriesProps {
 export default function AllCategories({ onBack }: AllCategoriesProps) {
   const router = useRouter();
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <ScrollView
         className="p-6"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 60 }}
+        contentContainerStyle={{ paddingBottom: 20 }}
       >
         {/* Header */}
         <View className="flex-row items-center mb-[30px]">
@@ -60,6 +61,6 @@ export default function AllCategories({ onBack }: AllCategoriesProps) {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

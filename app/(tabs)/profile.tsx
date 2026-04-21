@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   Settings, 
   BookOpen, 
@@ -16,11 +17,11 @@ import {
 
 export default function ProfileScreen() {
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <ScrollView 
-        className="flex-1 px-6 pt-12"
+        className="flex-1 px-6"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingTop: 12, paddingBottom: 20 }}
       >
         {/* Header */}
         <View className="mb-8">
@@ -201,6 +202,6 @@ export default function ProfileScreen() {
           Version 1.0.0
         </Text>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

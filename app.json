@@ -30,14 +30,29 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#0961F5"
       },
-      "edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": false,
+      "navigationBar": {
+        "backgroundColor": "#FFFFFF",
+        "barStyle": "dark-content"
+      },
+      "statusBar": {
+        "backgroundColor": "#F5F9FF",
+        "barStyle": "dark-content",
+        "translucent": false
+      },
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_CONTACTS",
         "WRITE_CONTACTS"
-      ]
+      ],
+      "package": "com.anonymous.LEARNFROMHOME"
     },
     "web": {
       "bundler": "metro",

@@ -1,18 +1,31 @@
-import 'react-native-reanimated';
-import '../global.css';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { Text as RNText, TextInput as RNTextInput } from 'react-native';
+import "react-native-reanimated";
+import "../global.css";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
+import * as SystemUI from "expo-system-ui";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import {
+  Text as RNText,
+  TextInput as RNTextInput,
+  Platform,
+  View,
+} from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { ThemeProvider as UIThemeProvider } from '@/components/ui/theme';
-import { ErrorBoundary } from '@/components/error-boundary';
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { ThemeProvider as UIThemeProvider } from "@/components/ui/theme";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { configureSystemUI } from "@/utils/systemUI";
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -49,11 +62,52 @@ export default function RootLayout() {
       if (!TextAny.defaultProps) TextAny.defaultProps = {};
       if (!TextInputAny.defaultProps) TextInputAny.defaultProps = {};
 
-      TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'Mulish-Bold' }];
-      TextInputAny.defaultProps.style = [TextInputAny.defaultProps.style, { fontFamily: 'Mulish-Bold' }];
+      TextAny.defaultProps.style = [
+        TextAny.defaultProps.style,
+        { fontFamily: "Mulish-Bold" },
+      ];
+      TextInputAny.defaultProps.style = [
+        TextInputAny.defaultProps.style,
+        { fontFamily: "Mulish-Bold" },
+      ];
 
       // Hide the splash screen after fonts are loaded
       SplashScreen.hideAsync();
+
+      // Configure system UI for better visibility
+      configureSystemUI();
+      
+      // Configure navigation bar color (Android system buttons at bottom)
+      if (Platform.OS === 'android') {
+        // Set navigation bar to WHITE background with DARK/BLACK buttons
+        
+        // Method 1: expo-navigation-bar with correct dark button style
+        NavigationBar.setBackgroundColorAsync('#FFFFFF')
+          .then(() => {
+            // Try different ways to set dark buttons
+            return NavigationBar.setButtonStyleAsync('dark-content');
+          })
+          .then(() => {
+            console.log('✅ Navigation bar: WHITE background + DARK buttons (dark-content)');
+          })
+          .catch(() => {
+            // Try alternative button style
+            NavigationBar.setButtonStyleAsync('dark')
+              .then(() => {
+                console.log('✅ Navigation bar: WHITE background + DARK buttons (dark)');
+              })
+              .catch(() => {
+                // Try expo-system-ui approach
+                SystemUI.setBackgroundColorAsync('#FFFFFF')
+                  .then(() => {
+                    console.log('✅ Navigation bar: WHITE background via expo-system-ui');
+                  })
+                  .catch(() => {
+                    console.log('❌ All navigation bar methods failed - Expo Go limitation');
+                  });
+              });
+          });
+      }
     }
   }, [loaded]);
 
@@ -63,26 +117,55 @@ export default function RootLayout() {
   }
 
   return (
-    <ErrorBoundary>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <UIThemeProvider>
-            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <Stack initialRouteName="(tabs)">
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="mentor" options={{ headerShown: false }} />
-                <Stack.Screen name="course" options={{ headerShown: false }} />
-                <Stack.Screen name="popular-courses" options={{ headerShown: false }} />
-                <Stack.Screen name="top-mentors" options={{ headerShown: false }} />
-                <Stack.Screen name="search" options={{ headerShown: false }} />
-                <Stack.Screen name="all-categories" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-              <StatusBar style="auto" />
-            </ThemeProvider>
-          </UIThemeProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </ErrorBoundary>
+    <SafeAreaProvider>
+      <ErrorBoundary>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <UIThemeProvider>
+              <ThemeProvider
+                value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+              >
+                <Stack initialRouteName="(tabs)">
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="mentor"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="course"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="popular-courses"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="top-mentors"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="search"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="all-categories"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+                <StatusBar
+                  style={Platform.OS === "ios" ? "dark" : "dark"}
+                  backgroundColor="#F5F9FF"
+                  translucent={false}
+                />
+              </ThemeProvider>
+            </UIThemeProvider>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ErrorBoundary>
+    </SafeAreaProvider>
   );
 }

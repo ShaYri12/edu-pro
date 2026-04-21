@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Search as SearchIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import MentorCard from '../components/MentorCard';
@@ -15,7 +16,7 @@ export default function TopMentorsScreen() {
   };
 
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <View className="p-6 flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between mb-[10px]">
@@ -50,6 +51,6 @@ export default function TopMentorsScreen() {
           contentContainerStyle={{ paddingTop: 8, paddingBottom: 40 }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

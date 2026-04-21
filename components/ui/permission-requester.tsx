@@ -4,15 +4,32 @@ import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as Contacts from "expo-contacts";
 import Constants from "expo-constants";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "./dialog";
 import { Button } from "./button";
 import { Text } from "./text";
-import { AlertCircle, Camera as CameraIcon, MapPin, Image, Users, Bell } from "lucide-react-native";
+import {
+  AlertCircle,
+  Camera as CameraIcon,
+  MapPin,
+  Image,
+  Users,
+  Bell,
+} from "lucide-react-native";
 import { iconWithClassName } from "./lib/icons/icon-with-classname";
 
 // Conditionally import notifications only if not in Expo Go
 let Notifications: any = null;
-if (!Constants.appOwnership || Constants.appOwnership !== 'expo') {
+if (
+  !Constants.executionEnvironment ||
+  Constants.executionEnvironment !== "storeClient"
+) {
   try {
     Notifications = require("expo-notifications");
   } catch (error) {
@@ -27,9 +44,9 @@ const ImageIcon = iconWithClassName(Image);
 const UsersIcon = iconWithClassName(Users);
 const BellIcon = iconWithClassName(Bell);
 
-export type PermissionType = 
+export type PermissionType =
   | "camera"
-  | "location" 
+  | "location"
   | "locationForeground"
   | "mediaLibrary"
   | "contacts"
@@ -90,14 +107,16 @@ export function PermissionRequester({
   onPermissionGranted,
   onPermissionDenied,
 }: PermissionRequesterProps) {
-  const [status, setStatus] = React.useState<"undetermined" | "granted" | "denied">("undetermined");
+  const [status, setStatus] = React.useState<
+    "undetermined" | "granted" | "denied"
+  >("undetermined");
   const [showDialog, setShowDialog] = React.useState(false);
   const permissionInfo = permissionInfoMap[permission];
 
   const checkPermission = React.useCallback(async () => {
     try {
       let permissionStatus;
-      
+
       // For now, we'll skip camera permission check due to API changes
       // You can implement expo-camera hooks separately
       if (permission === "camera") {
@@ -120,9 +139,11 @@ export function PermissionRequester({
           return;
         }
       }
-      
+
       if (permissionStatus) {
-        setStatus(permissionStatus.status as "undetermined" | "granted" | "denied");
+        setStatus(
+          permissionStatus.status as "undetermined" | "granted" | "denied"
+        );
       }
     } catch (error) {
       console.error("Error checking permission:", error);
@@ -143,7 +164,7 @@ export function PermissionRequester({
 
     try {
       let permissionResult;
-      
+
       // For camera, you'll need to use the useCameraPermissions hook in your component
       if (permission === "camera") {
         // For camera, just simulate granted for demo
@@ -169,11 +190,14 @@ export function PermissionRequester({
           return;
         }
       }
-      
+
       if (permissionResult) {
-        const newStatus = permissionResult.status as "undetermined" | "granted" | "denied";
+        const newStatus = permissionResult.status as
+          | "undetermined"
+          | "granted"
+          | "denied";
         setStatus(newStatus);
-        
+
         if (newStatus === "granted") {
           onPermissionGranted?.();
         } else if (newStatus === "denied") {
@@ -193,7 +217,7 @@ export function PermissionRequester({
   return (
     <>
       {children({ status, requestPermission })}
-      
+
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
@@ -201,11 +225,14 @@ export function PermissionRequester({
               <AlertCircleIcon className="h-8 w-8 text-destructive" />
             </DialogTitle>
             <DialogTitle>
-              <Text variant="h4" className="text-center">Permission Required</Text>
+              <Text variant="h4" className="text-center">
+                Permission Required
+              </Text>
             </DialogTitle>
             <DialogDescription>
               <Text variant="muted" className="text-center">
-                {permissionInfo.title} has been denied. Please enable it in your device settings to continue.
+                {permissionInfo.title} has been denied. Please enable it in your
+                device settings to continue.
               </Text>
             </DialogDescription>
           </DialogHeader>
@@ -229,12 +256,14 @@ export function PermissionRequester({
 
 // Convenience hook for permissions
 export function usePermission(permission: PermissionType) {
-  const [status, setStatus] = React.useState<"undetermined" | "granted" | "denied">("undetermined");
+  const [status, setStatus] = React.useState<
+    "undetermined" | "granted" | "denied"
+  >("undetermined");
 
   const checkPermission = React.useCallback(async () => {
     try {
       let permissionStatus;
-      
+
       if (permission === "camera") {
         // For camera, you need to use useCameraPermissions hook
         return;
@@ -255,9 +284,11 @@ export function usePermission(permission: PermissionType) {
           return;
         }
       }
-      
+
       if (permissionStatus) {
-        setStatus(permissionStatus.status as "undetermined" | "granted" | "denied");
+        setStatus(
+          permissionStatus.status as "undetermined" | "granted" | "denied"
+        );
       }
     } catch (error) {
       console.error("Error checking permission:", error);
@@ -271,7 +302,7 @@ export function usePermission(permission: PermissionType) {
   const request = async () => {
     try {
       let permissionResult;
-      
+
       if (permission === "camera") {
         // For camera, return true for demo
         setStatus("granted");
@@ -293,13 +324,16 @@ export function usePermission(permission: PermissionType) {
           return true;
         }
       }
-      
+
       if (permissionResult) {
-        const newStatus = permissionResult.status as "undetermined" | "granted" | "denied";
+        const newStatus = permissionResult.status as
+          | "undetermined"
+          | "granted"
+          | "denied";
         setStatus(newStatus);
         return newStatus === "granted";
       }
-      
+
       return false;
     } catch (error) {
       console.error("Error requesting permission:", error);

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, Star, Bookmark, Heart } from "lucide-react-native";
 import { getMentorById, getCoursesByMentorId } from "@/constants/courses";
@@ -62,23 +63,25 @@ export default function MentorDetailRoute() {
 
   if (!mentor) {
     return (
-      <View className="flex-1 bg-[#F5F9FF] p-6">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-          className="mb-4"
-        >
-          <ArrowLeft size={24} color="#0B1354" />
-        </TouchableOpacity>
-        <Text className="text-dark-blue font-jost-semibold text-[18px]">
-          Mentor not found
-        </Text>
-      </View>
+      <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
+        <View className="p-6">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+            className="mb-4"
+          >
+            <ArrowLeft size={24} color="#0B1354" />
+          </TouchableOpacity>
+          <Text className="text-dark-blue font-jost-semibold text-[18px]">
+            Mentor not found
+          </Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View className="flex-1 bg-[#F5F9FF]">
+    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -328,6 +331,6 @@ export default function MentorDetailRoute() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

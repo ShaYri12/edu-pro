@@ -7,7 +7,7 @@ export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
-      <SafeAreaView className="flex-1 bg-background">
+      <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
         <View className="flex-1 items-center justify-center p-5">
           <Text variant="h1" className="mb-4">404</Text>
           <Text variant="h3" className="mb-2">Page not found</Text>

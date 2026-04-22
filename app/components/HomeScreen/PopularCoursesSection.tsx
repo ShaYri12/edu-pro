@@ -19,13 +19,13 @@ export default function PopularCoursesSection({
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   return (
-    <View>
+    <View className="mb-6">
       <SectionHeader title="Popular Courses" onSeeAll={onSeeAll} />
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 10, marginBottom: 20, gap: 12 }}
+        contentContainerStyle={{ paddingTop: 10, paddingBottom: 20, paddingHorizontal: 0, gap: 12 }}
         scrollEventThrottle={16}
       >
         {COURSE_CATEGORIES.map((category) => (
@@ -41,7 +41,7 @@ export default function PopularCoursesSection({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 30, gap: 20 }}
+        contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 0, gap: 20 }}
         scrollEventThrottle={16}
       >
         {(selectedCategory === 'All' ? getTopCourses(10) : listCoursesByCategory(selectedCategory)).map((course) => (

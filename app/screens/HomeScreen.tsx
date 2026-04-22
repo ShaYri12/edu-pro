@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { ScrollView, View, useWindowDimensions, FlatList, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../components/HomeScreen/Header';
 import SearchBar from '../components/SearchBar';
 import CategoriesSection from '../components/HomeScreen/CategoriesSection';
@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 export default function HomeScreen() {
   const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const H_PADDING = 32; // px-8
   const ITEM_GAP = 12;
   const itemWidth = useMemo(() => screenWidth - H_PADDING * 2, [screenWidth]);
@@ -90,13 +91,14 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
-      <ScrollView
-        className="flex-1 p-6"
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
+    <View className="flex-1 bg-[#F5F9FF]">
+      <SafeAreaView className="flex-1" edges={['top']}>
+        <ScrollView
+          className="flex-1 p-6"
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}
+        >
       <Header userName="ALEX" onBellPress={handleBellPress} />
 
       <SearchBar
@@ -175,7 +177,8 @@ export default function HomeScreen() {
         onSeeAll={handleSeeAllMentors}
         onMentorPress={handleMentorPress}
       />
-    </ScrollView>
-  </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }

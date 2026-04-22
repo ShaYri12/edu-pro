@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { View, Text, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ArrowLeft, X, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
@@ -9,6 +9,7 @@ import SearchBar from '../components/SearchBar';
 import CourseCard from '../components/CourseCard';
 import MentorCard from '../components/MentorCard';
 import { searchCourses, searchMentors } from '@/constants/courses';
+import { useAppStateBackground } from '../hooks/useAppStateBackground';
 
 const STORAGE_KEY = '@search_history_v1';
 const MAX_HISTORY = 20;
@@ -20,6 +21,8 @@ export default function SearchScreen() {
   const [history, setHistory] = useState<string[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'Courses' | 'Mentors'>('Courses');
+  const insets = useSafeAreaInsets();
+  const backgroundKey = useAppStateBackground();
 
   // Load history
   useEffect(() => {
@@ -89,12 +92,15 @@ export default function SearchScreen() {
   }, [history, showAll, query, committedQuery]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
-      <ScrollView
-        className="flex-1 px-8 py-8"
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"   // ← important when keyboard is open
-      >
+    <View className="flex-1 bg-[#F5F9FF]" key={backgroundKey}>
+      <View className="flex-1 bg-[#F5F9FF]">
+        <SafeAreaView className="flex-1" edges={['top']}>
+          <ScrollView
+            className="flex-1 px-8 py-8"
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}
+          >
         {/* Header */}
         <View className="flex-row items-center mb-[20px]">
           <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
@@ -224,6 +230,14 @@ export default function SearchScreen() {
           </>
         )}
       </ScrollView>
+      
+      {/* Background extension to ensure system navigation area is covered */}
+      <View 
+        className="absolute bottom-0 left-0 right-0 bg-[#F5F9FF]"
+        style={{ height: Math.max(insets.bottom, 20), zIndex: -1 }}
+      />
     </SafeAreaView>
+    </View>
+    </View>
   );
 }

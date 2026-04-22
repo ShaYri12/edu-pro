@@ -1,23 +1,29 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Search as SearchIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import MentorCard from '../components/MentorCard';
 import { mentors as ALL_MENTORS } from '@/constants/courses';
+import { useAppStateBackground } from '../hooks/useAppStateBackground';
 
 const MENTORS = ALL_MENTORS;
 
 export default function TopMentorsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const backgroundKey = useAppStateBackground();
+  
   const onMentorPress = (mentorId: number) => {
     console.log('[v0] Mentor selected:', mentorId);
     router.push(`/mentor?id=${mentorId}`);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
-      <View className="p-6 flex-1">
+    <View className="flex-1 bg-[#F5F9FF]">
+      <View className="flex-1 bg-[#F5F9FF]">
+        <SafeAreaView className="flex-1" edges={['top']}>
+          <View className="p-6 flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between mb-[10px]">
           <View className="flex-row items-center">
@@ -48,9 +54,11 @@ export default function TopMentorsScreen() {
             </TouchableOpacity>
           )}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingTop: 8, paddingBottom: 40 }}
+          contentContainerStyle={{ paddingTop: 8, paddingBottom: Math.max(insets.bottom + 40, 60) }}
         />
       </View>
     </SafeAreaView>
+    </View>
+    </View>
   );
 }

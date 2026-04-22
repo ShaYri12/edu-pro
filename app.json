@@ -32,7 +32,7 @@
       },
       "edgeToEdgeEnabled": false,
       "navigationBar": {
-        "backgroundColor": "#FFFFFF",
+        "backgroundColor": "#F5F9FF",
         "barStyle": "dark-content"
       },
       "statusBar": {

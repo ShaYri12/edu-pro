@@ -121,6 +121,10 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
+                    name="reviews"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
                     name="popular-courses"
                     options={{ headerShown: false }}
                   />

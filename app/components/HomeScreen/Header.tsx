@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export default function Header({ userName, onBellPress }: HeaderProps) {
   return (
-    <View className="pb-11">
+    <View className="pb-6">
       <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-3">
           <Text className="text-[24px] font-jost-semibold text-dark-blue">

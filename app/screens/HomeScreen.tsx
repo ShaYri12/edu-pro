@@ -97,7 +97,7 @@ export default function HomeScreen() {
           className="flex-1 p-6"
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
-          contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 40) }}
+          contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 20, 30) }}
         >
       <Header userName="ALEX" onBellPress={handleBellPress} />
 
@@ -107,7 +107,7 @@ export default function HomeScreen() {
         onFocusInput={() => router.push('/search')}
       />
 
-      <View style={{ marginTop: 12, position: 'relative' }}>
+      <View style={{ position: 'relative' }}>
         <FlatList
           ref={listRef}
           data={promos}

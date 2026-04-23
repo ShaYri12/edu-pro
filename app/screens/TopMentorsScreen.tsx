@@ -5,7 +5,7 @@ import { ArrowLeft, Search as SearchIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import MentorCard from '../components/MentorCard';
 import { mentors as ALL_MENTORS } from '@/constants/courses';
-import { useAppStateBackground } from '../hooks/useAppStateBackground';
+import { useAppStateBackground } from '@/hooks/useAppStateBackground';
 
 const MENTORS = ALL_MENTORS;
 

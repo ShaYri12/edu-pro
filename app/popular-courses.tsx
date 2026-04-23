@@ -6,7 +6,7 @@ import CategoryPill from './components/HomeScreen/CategoryPill';
 import CourseCard from './components/CourseCard';
 import { useRouter } from 'expo-router';
 import { listCoursesByCategory } from '@/constants/courses';
-import { useAppStateBackground } from './hooks/useAppStateBackground';
+import { useAppStateBackground } from '@/hooks/useAppStateBackground';
 
 const COURSE_CATEGORIES = ['All', 'Graphic Design', '3D Design', 'Arts & Humanities', 'Web Development', 'SEO & Marketing', 'Finance & Accounting', 'Personal Development', 'Office Productivity', 'HR Management'];
 

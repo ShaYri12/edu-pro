@@ -10,7 +10,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import SearchBar from "../components/SearchBar";
 import { ArrowLeft } from "lucide-react-native";
 import { useRouter } from "expo-router";
-import { useAppStateBackground } from "../hooks/useAppStateBackground";
+import { useAppStateBackground } from "@/hooks/useAppStateBackground";
 
 // Import SVG icons
 import ThreeDDesignIcon from "@/assets/icons/3d-design.svg";

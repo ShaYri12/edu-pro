@@ -9,7 +9,7 @@ import SearchBar from '../components/SearchBar';
 import CourseCard from '../components/CourseCard';
 import MentorCard from '../components/MentorCard';
 import { searchCourses, searchMentors } from '@/constants/courses';
-import { useAppStateBackground } from '../hooks/useAppStateBackground';
+import { useAppStateBackground } from '@/hooks/useAppStateBackground';
 
 const STORAGE_KEY = '@search_history_v1';
 const MAX_HISTORY = 20;

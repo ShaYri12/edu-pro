@@ -7,7 +7,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, Star, Bookmark, Heart } from "lucide-react-native";
 import { getMentorById, getCoursesByMentorId } from "@/constants/courses";
-import { useAppStateBackground } from "./hooks/useAppStateBackground";
+import { useAppStateBackground } from "@/hooks/useAppStateBackground";
 
 // Dummy ratings data
 const mentorRatings = [

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import NotificationIcon from "@/assets/icons/notification.svg";
+import NotificationIcon from "@/components/SVGs/Notification";
 
 interface HeaderProps {
   userName: string;
@@ -24,7 +24,7 @@ export default function Header({ userName, onBellPress }: HeaderProps) {
           onPress={onBellPress}
           className="w-10 h-10 rounded-full border-2 border-[#167F71] items-center justify-center"
         >
-          <NotificationIcon width={15.3} height={18} />
+          <NotificationIcon color="#167F71" size={18} />
         </TouchableOpacity>
       </View>
     </View>

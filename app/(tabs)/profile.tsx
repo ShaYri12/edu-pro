@@ -1,207 +1,157 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { 
-  Settings, 
-  BookOpen, 
-  Award, 
-  Heart, 
-  HelpCircle, 
-  LogOut,
-  ChevronRight,
-  Edit3,
-  Bell,
-  Shield,
-  CreditCard
-} from 'lucide-react-native';
+import React from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { ArrowLeft, Moon, ChevronRight, ImageIcon } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import ProfileIcon from "../../components/SVGs/Profile";
+import TransactionIcon from "../../components/SVGs/Transaction";
+import NotificationIcon from "../../components/SVGs/Notification";
+import SecurityIcon from "@/assets/icons/security.svg";
+import EyeIcon from "@/assets/icons/eye.svg";
+import HelpIcon from "@/assets/icons/help.svg";
+import InviteIcon from "@/assets/icons/invite.svg";
+import TermsIcon from "@/assets/icons/terms.svg";
 
 export default function ProfileScreen() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+
+  const menuItems = [
+    {
+      id: 1,
+      title: "Edit Profile",
+      icon: ProfileIcon,
+      isComponent: true,
+    },
+    {
+      id: 2,
+      title: "Payment Option",
+      icon: TransactionIcon,
+      isComponent: true,
+    },
+    {
+      id: 3,
+      title: "Notifications",
+      icon: NotificationIcon,
+      isComponent: true,
+    },
+    {
+      id: 4,
+      title: "Security",
+      icon: SecurityIcon,
+      isComponent: false,
+    },
+    {
+      id: 5,
+      title: "Dark Mode",
+      icon: EyeIcon,
+      isComponent: true,
+    },
+    {
+      id: 6,
+      title: "Terms & Conditions",
+      icon: TermsIcon,
+      isComponent: false,
+    },
+    {
+      id: 7,
+      title: "Help Center",
+      icon: HelpIcon,
+      isComponent: false,
+    },
+    {
+      id: 8,
+      title: "Intive Friends",
+      icon: InviteIcon,
+      isComponent: false,
+    },
+  ];
+
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
-      <ScrollView 
-        className="flex-1 px-6"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 12, paddingBottom: 20 }}
-      >
-        {/* Header */}
-        <View className="mb-8">
-          <Text className="text-[28px] font-jost-semibold text-dark-blue">
-            Profile
-          </Text>
-          <Text className="text-[14px] text-light-gray mt-1">
-            Manage your account and preferences
-          </Text>
-        </View>
-
-        {/* Profile Card */}
-        <View className="bg-white rounded-2xl p-6 mb-6 shadow-[0_4px_10px_0_#00000014]">
-          <View className="flex-row items-center gap-4">
-            <View className="w-[80px] h-[80px] rounded-full bg-primary items-center justify-center">
-              <Text className="text-white text-[28px] font-jost-semibold">JD</Text>
-            </View>
-            
-            <View className="flex-1">
-              <Text className="text-[20px] font-jost-semibold text-dark-blue">
-                John Doe
-              </Text>
-              <Text className="text-[14px] text-light-gray mb-2">
-                john.doe@example.com
-              </Text>
-              <View className="flex-row items-center gap-4">
-                <View className="flex-row items-center gap-1">
-                  <BookOpen size={14} color="#0961F5" />
-                  <Text className="text-[12px] text-primary font-mulish-extrabold">
-                    3 Courses
-                  </Text>
-                </View>
-                <View className="flex-row items-center gap-1">
-                  <Award size={14} color="#FAC025" />
-                  <Text className="text-[12px] text-[#FAC025] font-mulish-extrabold">
-                    2 Certificates
-                  </Text>
-                </View>
-              </View>
-            </View>
-            
-            <TouchableOpacity activeOpacity={0.7}>
-              <Edit3 size={20} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Stats Cards */}
-        <View className="flex-row gap-4 mb-6">
-          <View className="flex-1 bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <Text className="text-[24px] font-jost-semibold text-dark-blue">12</Text>
-            <Text className="text-[12px] text-light-gray">Hours Learned</Text>
-          </View>
-          <View className="flex-1 bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <Text className="text-[24px] font-jost-semibold text-dark-blue">85%</Text>
-            <Text className="text-[12px] text-light-gray">Avg Progress</Text>
-          </View>
-          <View className="flex-1 bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <Text className="text-[24px] font-jost-semibold text-dark-blue">7</Text>
-            <Text className="text-[12px] text-light-gray">Day Streak</Text>
-          </View>
-        </View>
-
-        {/* Menu Items */}
-        <View className="bg-white rounded-2xl shadow-[0_4px_10px_0_#00000014] mb-6">
-          {/* Account Settings */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4 border-b border-[#E5E7EB]"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#E8F1FF] items-center justify-center">
-                <Settings size={18} color="#0961F5" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Account Settings
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-
-          {/* Notifications */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4 border-b border-[#E5E7EB]"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#FFF3E0] items-center justify-center">
-                <Bell size={18} color="#FAC025" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Notifications
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-
-          {/* Payment Methods */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4 border-b border-[#E5E7EB]"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#E8F5E8] items-center justify-center">
-                <CreditCard size={18} color="#0FB77A" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Payment Methods
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-
-          {/* Privacy & Security */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4 border-b border-[#E5E7EB]"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#F3E8FF] items-center justify-center">
-                <Shield size={18} color="#8B5CF6" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Privacy & Security
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-
-          {/* Wishlist */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4 border-b border-[#E5E7EB]"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#FFE8E8] items-center justify-center">
-                <Heart size={18} color="#FF6B6B" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Wishlist
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-
-          {/* Help & Support */}
-          <TouchableOpacity 
-            activeOpacity={0.8}
-            className="flex-row items-center justify-between p-4"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-[40px] h-[40px] rounded-full bg-[#E0F2FE] items-center justify-center">
-                <HelpCircle size={18} color="#0891B2" />
-              </View>
-              <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                Help & Support
-              </Text>
-            </View>
-            <ChevronRight size={20} color="#6B7280" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Logout Button */}
-        <TouchableOpacity 
-          activeOpacity={0.8}
-          className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]"
+    <View className="flex-1 bg-[#F5F9FF]">
+      <SafeAreaView className="flex-1" edges={["top"]}>
+        <ScrollView
+          className="flex-1 py-6"
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            paddingBottom: Math.max(insets.bottom + 20, 40),
+          }}
         >
-          <View className="flex-row items-center justify-center gap-3">
-            <LogOut size={18} color="#FF6B6B" />
-            <Text className="text-[15px] font-jost-semibold text-[#FF6B6B]">
-              Logout
+          {/* Header */}
+          <View className="flex-row items-center mb-[18px] px-4">
+            <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+              <ArrowLeft size={24} color="#0B1354" />
+            </TouchableOpacity>
+            <Text className="ml-3 text-dark-blue font-jost-semibold text-[20px]">
+              Profile
             </Text>
           </View>
-        </TouchableOpacity>
 
-        {/* App Version */}
-        <Text className="text-center text-[12px] text-light-gray mt-6">
-          Version 1.0.0
-        </Text>
-      </ScrollView>
-    </SafeAreaView>
+          {/* Profile Picture - Outside the card */}
+          <View className="items-center mb-[-70px] z-10">
+            <View className="relative">
+              <View className="w-[110px] h-[110px] rounded-full bg-[#D8D8D8] border-[4px] border-secondary items-center justify-center">
+                {/* Placeholder for profile image */}
+              </View>
+
+              {/* Image/Gallery Icon */}
+              <View className="absolute bottom-[-4px] right-2 w-[36px] h-[36px] bg-white rounded-[8px] border-[3px] border-secondary items-center justify-center">
+                <ImageIcon size={20} color="#167F71" />
+              </View>
+            </View>
+          </View>
+
+          {/* Main Card Container */}
+          <View style={{paddingTop: 80}} className="bg-white rounded-3xl mx-4 pb-6 px-6 shadow-[0_4px_20px_0_#00000010]">
+            {/* User Info */}
+            <View className="items-center mb-4">
+              <Text className="text-[24px] font-jost-semibold text-dark-blue mb-1">
+                Alex
+              </Text>
+              <Text className="text-[13px] text-[#545454]">
+                hernandex.redial@gmail.ac.in
+              </Text>
+            </View>
+
+            {/* Menu Items */}
+            <View>
+              {menuItems.map((item, index) => (
+                <View key={item.id}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    className="flex-row items-center justify-between py-4"
+                  >
+                    <View className="flex-row items-center gap-3">
+                      {item.isComponent ? (
+                        <item.icon size={23} color="#202244" />
+                      ) : (
+                        <item.icon width={23} height={23} />
+                      )}
+                      <Text className="text-[15px] text-dark-blue">
+                        {item.title}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center gap-3">
+                      <ChevronRight size={22} color="#1D1D1B" />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+
+        {/* Background extension */}
+        <View
+          className="absolute bottom-0 left-0 right-0 bg-[#F5F9FF]"
+          style={{ height: Math.max(insets.bottom, 20), zIndex: -1 }}
+        />
+      </SafeAreaView>
+    </View>
   );
 }

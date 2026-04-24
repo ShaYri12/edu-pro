@@ -1,188 +1,183 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { CreditCard, ArrowUpRight, ArrowDownLeft, Calendar, Filter } from 'lucide-react-native';
+import React, { useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { ArrowLeft, Search, X } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import SearchBar from "../components/SearchBar";
 
 export default function TransactionScreen() {
-  const [activeFilter, setActiveFilter] = useState<'All' | 'Income' | 'Expense'>('All');
+  const router = useRouter();
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const insets = useSafeAreaInsets();
+
+  const transactions = [
+    {
+      id: 1,
+      title: "Build Personal Branding",
+      category: "Web Designer",
+      status: "Paid",
+      image: require("../../assets/images/graphic-design.jpg"),
+    },
+    {
+      id: 2,
+      title: "Mastering Blender 3D",
+      category: "UI/UX Designer",
+      status: "Paid",
+      image: require("../../assets/images/3d-design.jpg"),
+    },
+    {
+      id: 3,
+      title: "Full Stack Web Development",
+      category: "Web Development",
+      status: "Paid",
+      image: require("../../assets/images/web-development.jpg"),
+    },
+    {
+      id: 4,
+      title: "Complete UI Designer",
+      category: "HR Management",
+      status: "Paid",
+      image: require("../../assets/images/hr-management.jpg"),
+    },
+    {
+      id: 5,
+      title: "Sharing Work with Team",
+      category: "Finance & Accounting",
+      status: "Paid",
+      image: require("../../assets/images/seo-marketing.jpeg"),
+    },
+  ];
+
+  // Filter transactions based on search query
+  const filteredTransactions = searchQuery.trim()
+    ? transactions.filter(
+        (transaction) =>
+          transaction.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          transaction.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : transactions;
+
+  const handleSearchPress = () => {
+    setShowSearch(!showSearch);
+    if (showSearch) {
+      setSearchQuery(""); // Clear search when closing
+    }
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F9FF]" edges={['top']}>
-      <ScrollView 
-        className="flex-1 px-6"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 12, paddingBottom: 20 }}
-      >
-        {/* Header */}
-        <View className="mb-8">
-          <Text className="text-[28px] font-jost-semibold text-dark-blue">
-            Transactions
-          </Text>
-          <Text className="text-[14px] text-light-gray mt-1">
-            Your payment history
-          </Text>
-        </View>
-
-        {/* Balance Card */}
-        <View className="bg-primary rounded-2xl p-6 mb-6 shadow-[0_4px_10px_0_#00000014]">
-          <Text className="text-white/80 text-[14px] mb-2">Total Balance</Text>
-          <Text className="text-white text-[32px] font-jost-semibold mb-4">₹2,450</Text>
-          
-          <View className="flex-row items-center justify-between">
-            <View>
-              <Text className="text-white/80 text-[12px]">This Month</Text>
-              <Text className="text-white text-[16px] font-jost-semibold">₹850</Text>
+    <View className="flex-1 bg-[#F5F9FF]">
+      <SafeAreaView className="flex-1" edges={["top"]}>
+        <ScrollView
+          className="flex-1 px-8 py-8"
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            paddingBottom: Math.max(insets.bottom + 20, 40),
+          }}
+        >
+          {/* Header */}
+          <View className="flex-row items-center justify-between mb-[20px]">
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                onPress={() => router.back()}
+                activeOpacity={0.7}
+              >
+                <ArrowLeft size={24} color="#0B1354" />
+              </TouchableOpacity>
+              <Text className="ml-3 text-dark-blue font-jost-semibold text-[21px]">
+                Transactions
+              </Text>
             </View>
-            <TouchableOpacity 
-              activeOpacity={0.8}
-              className="bg-white/20 rounded-full px-4 py-2"
-            >
-              <Text className="text-white font-jost-semibold text-[14px]">Add Money</Text>
+
+            <TouchableOpacity onPress={handleSearchPress} activeOpacity={0.7}>
+              {showSearch ? (
+                <X size={24} color="#0B1354" />
+              ) : (
+                <Search size={24} color="#0B1354" />
+              )}
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Filter Tabs */}
-        <View className="flex-row bg-white rounded-2xl p-1 mb-6 shadow-[0_4px_10px_0_#00000014]">
-          {(['All', 'Income', 'Expense'] as const).map((filter) => (
-            <TouchableOpacity
-              key={filter}
-              onPress={() => setActiveFilter(filter)}
-              activeOpacity={0.8}
-              className={`flex-1 py-3 rounded-xl items-center ${
-                activeFilter === filter ? 'bg-primary' : 'bg-transparent'
-              }`}
-            >
-              <Text className={`font-jost-semibold ${
-                activeFilter === filter ? 'text-white' : 'text-dark-blue'
-              }`}>
-                {filter}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Transaction List */}
-        <View className="gap-3">
-          {/* Course Purchase */}
-          <View className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-[#FF6B6B]/10 items-center justify-center">
-                  <ArrowUpRight size={20} color="#FF6B6B" />
-                </View>
-                <View>
-                  <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                    Graphic Design Course
-                  </Text>
-                  <Text className="text-[12px] text-light-gray">Course Purchase</Text>
-                  <Text className="text-[11px] text-light-gray">Dec 15, 2024</Text>
-                </View>
-              </View>
-              <Text className="text-[16px] font-jost-semibold text-[#FF6B6B]">
-                -₹499
-              </Text>
+          {/* Search Bar - Conditionally shown */}
+          {showSearch && (
+            <View className="mb-5">
+              <SearchBar
+                placeholder="Search transactions..."
+                iconType="search"
+                onSearch={(text) => {
+                  setSearchQuery(text);
+                }}
+              />
             </View>
-          </View>
+          )}
 
-          {/* Refund */}
-          <View className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-[#0FB77A]/10 items-center justify-center">
-                  <ArrowDownLeft size={20} color="#0FB77A" />
+          {/* Transaction List */}
+          <View>
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction, index) => (
+                <View key={transaction.id}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    className="flex-row items-start gap-4 py-5"
+                  >
+                    {/* Transaction Image */}
+                    <View className="w-[92px] h-[92px] rounded-[18px] overflow-hidden">
+                      <Image
+                        source={transaction.image}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="cover"
+                      />
+                    </View>
+
+                    {/* Transaction Info */}
+                    <View className="flex-1">
+                      <Text
+                        className="text-[18px] font-jost-semibold text-dark-blue mb-1"
+                        numberOfLines={2}
+                      >
+                        {transaction.title}
+                      </Text>
+                      <Text className="text-[14px] text-[#545454] mb-3">
+                        {transaction.category}
+                      </Text>
+
+                      <View className="bg-secondary px-3 py-1 rounded self-start">
+                        <Text className="text-white font-mulish-extrabold text-[12px]">
+                          {transaction.status}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+
+                  {/* Divider - Don't show after last item */}
+                  {index < filteredTransactions.length - 1 && (
+                    <View className="h-[1px] bg-[#E5E7EB]" />
+                  )}
                 </View>
-                <View>
-                  <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                    Course Refund
-                  </Text>
-                  <Text className="text-[12px] text-light-gray">Refund Processed</Text>
-                  <Text className="text-[11px] text-light-gray">Dec 12, 2024</Text>
-                </View>
+              ))
+            ) : (
+              <View className="items-center py-12">
+                <Text className="text-[18px] font-jost-semibold text-dark-blue">
+                  No transactions found
+                </Text>
+                <Text className="text-[14px] text-light-gray text-center mt-2">
+                  Try searching with different keywords
+                </Text>
               </View>
-              <Text className="text-[16px] font-jost-semibold text-[#0FB77A]">
-                +₹350
-              </Text>
-            </View>
+            )}
           </View>
+        </ScrollView>
 
-          {/* Web Development Course */}
-          <View className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-[#FF6B6B]/10 items-center justify-center">
-                  <ArrowUpRight size={20} color="#FF6B6B" />
-                </View>
-                <View>
-                  <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                    Web Development Course
-                  </Text>
-                  <Text className="text-[12px] text-light-gray">Course Purchase</Text>
-                  <Text className="text-[11px] text-light-gray">Dec 10, 2024</Text>
-                </View>
-              </View>
-              <Text className="text-[16px] font-jost-semibold text-[#FF6B6B]">
-                -₹200
-              </Text>
-            </View>
-          </View>
-
-          {/* Wallet Top-up */}
-          <View className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-[#0FB77A]/10 items-center justify-center">
-                  <ArrowDownLeft size={20} color="#0FB77A" />
-                </View>
-                <View>
-                  <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                    Wallet Top-up
-                  </Text>
-                  <Text className="text-[12px] text-light-gray">Money Added</Text>
-                  <Text className="text-[11px] text-light-gray">Dec 8, 2024</Text>
-                </View>
-              </View>
-              <Text className="text-[16px] font-jost-semibold text-[#0FB77A]">
-                +₹1,000
-              </Text>
-            </View>
-          </View>
-
-          {/* 3D Modeling Course */}
-          <View className="bg-white rounded-2xl p-4 shadow-[0_4px_10px_0_#00000014]">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center gap-3">
-                <View className="w-[44px] h-[44px] rounded-full bg-[#FF6B6B]/10 items-center justify-center">
-                  <ArrowUpRight size={20} color="#FF6B6B" />
-                </View>
-                <View>
-                  <Text className="text-[15px] font-jost-semibold text-dark-blue">
-                    3D Modeling Basics
-                  </Text>
-                  <Text className="text-[12px] text-light-gray">Course Purchase</Text>
-                  <Text className="text-[11px] text-light-gray">Dec 5, 2024</Text>
-                </View>
-              </View>
-              <Text className="text-[16px] font-jost-semibold text-[#FF6B6B]">
-                -₹350
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Empty State (when no transactions) */}
-        {/* 
-        <View className="items-center py-12">
-          <CreditCard size={64} color="#E5E7EB" />
-          <Text className="text-[18px] font-jost-semibold text-dark-blue mt-4">
-            No Transactions
-          </Text>
-          <Text className="text-[14px] text-light-gray text-center mt-2 px-8">
-            Your transaction history will appear here
-          </Text>
-        </View>
-        */}
-      </ScrollView>
-    </SafeAreaView>
+        {/* Background extension */}
+        <View
+          className="absolute bottom-0 left-0 right-0 bg-[#F5F9FF]"
+          style={{ height: Math.max(insets.bottom, 20), zIndex: -1 }}
+        />
+      </SafeAreaView>
+    </View>
   );
 }

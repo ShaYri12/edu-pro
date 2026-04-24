@@ -4,7 +4,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { ArrowLeft, Star, Check } from "lucide-react-native";
+import { ArrowLeft, Star } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import SearchBar from "../components/SearchBar";
 import CheckmarkIcon from "@/assets/icons/checkmark.svg";

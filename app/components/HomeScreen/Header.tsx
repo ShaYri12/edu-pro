@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
 import NotificationIcon from "@/components/SVGs/Notification";
 
 interface HeaderProps {
@@ -8,6 +9,14 @@ interface HeaderProps {
 }
 
 export default function Header({ userName, onBellPress }: HeaderProps) {
+  const handleBellPress = () => {
+    if (onBellPress) {
+      onBellPress();
+    } else {
+      router.push({ pathname: "/notifications" });
+    }
+  };
+
   return (
     <View className="pb-6">
       <View className="flex-row items-start justify-between">
@@ -21,7 +30,7 @@ export default function Header({ userName, onBellPress }: HeaderProps) {
           <Text className="text-[13px] text-[#545454CC]">Search Below.</Text>
         </View>
         <TouchableOpacity
-          onPress={onBellPress}
+          onPress={handleBellPress}
           className="w-10 h-10 rounded-full border-2 border-[#167F71] items-center justify-center"
         >
           <NotificationIcon color="#167F71" size={18} />

@@ -64,6 +64,7 @@ export default function HomeScreen() {
 
   const handleBellPress = () => {
     console.log('[v0] Notifications');
+    router.push('/notifications');
   };
 
   const handleSeeAllCategories = () => {

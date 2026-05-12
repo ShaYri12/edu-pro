@@ -140,6 +140,10 @@ export default function RootLayout() {
                     name="all-categories"
                     options={{ headerShown: false }}
                   />
+                  <Stack.Screen
+                    name="notifications"
+                    options={{ headerShown: false }}
+                  />
                   <Stack.Screen name="+not-found" />
                 </Stack>
                 <StatusBar

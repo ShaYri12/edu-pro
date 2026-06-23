@@ -243,6 +243,15 @@ export default function InboxScreen() {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       className="p-4 flex-row items-center"
+                      onPress={() =>
+                        router.push({
+                          pathname: "/chat",
+                          params: {
+                            name: chat.name,
+                            chatId: chat.id.toString(),
+                          },
+                        })
+                      }
                     >
                       {/* Avatar */}
                       <View className="w-12 h-12 bg-black rounded-full mr-4" />

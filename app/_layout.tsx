@@ -113,6 +113,10 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
+                    name="e-receipt"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
                     name="mentor"
                     options={{ headerShown: false }}
                   />
@@ -142,6 +146,10 @@ export default function RootLayout() {
                   />
                   <Stack.Screen
                     name="notifications"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="chat"
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen name="+not-found" />

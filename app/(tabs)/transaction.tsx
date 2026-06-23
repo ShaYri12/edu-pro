@@ -123,6 +123,17 @@ export default function TransactionScreen() {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     className="flex-row items-start gap-4 py-5"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/e-receipt",
+                        params: {
+                          transactionId: transaction.id,
+                          title: transaction.title,
+                          category: transaction.category,
+                          status: transaction.status,
+                        },
+                      })
+                    }
                   >
                     {/* Transaction Image */}
                     <View className="w-[92px] h-[92px] rounded-[18px] overflow-hidden">

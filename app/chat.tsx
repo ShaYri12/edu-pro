@@ -75,7 +75,16 @@ export default function ChatScreen() {
     }
   };
 
-  // Search functionality
+  // Handle call button press
+  const handleCallPress = () => {
+    router.push({
+      pathname: "/call",
+      params: {
+        contactName: contact.name,
+        isIncoming: "false",
+      },
+    });
+  };
   const handleSearchPress = () => {
     setIsSearchMode(true);
     setTimeout(() => {
@@ -541,7 +550,7 @@ export default function ChatScreen() {
                 </View>
               </View>
               <View className="flex-row items-center gap-4">
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity onPress={handleCallPress} activeOpacity={0.7}>
                   <Phone size={24} color="#0B1354" />
                 </TouchableOpacity>
                 <TouchableOpacity

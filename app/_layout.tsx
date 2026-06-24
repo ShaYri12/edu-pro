@@ -152,6 +152,10 @@ export default function RootLayout() {
                     name="chat"
                     options={{ headerShown: false }}
                   />
+                  <Stack.Screen
+                    name="call"
+                    options={{ headerShown: false }}
+                  />
                   <Stack.Screen name="+not-found" />
                 </Stack>
                 <StatusBar

@@ -5,13 +5,13 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
+  Keyboard,
 } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import {
   ArrowLeft,
   Phone,
@@ -19,8 +19,10 @@ import {
   Mic,
   Search,
   Send,
+  ChevronDown,
+  X,
+  ChevronUp,
 } from "lucide-react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
 
 interface Message {
   id: string;
@@ -31,20 +33,183 @@ interface Message {
   images?: string[];
 }
 
+interface ChatContact {
+  name: string;
+  avatar?: string;
+  isOnline?: boolean;
+}
+
 export default function ChatScreen() {
-  const router = useRouter();
-  const params = useLocalSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [inputHeight, setInputHeight] = useState(20); // Single line height
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState<number[]>([]);
+  const [currentSearchIndex, setCurrentSearchIndex] = useState(-1);
   const scrollViewRef = useRef<ScrollView>(null);
+  const searchInputRef = useRef<TextInput>(null);
+  const messageRefs = useRef<{ [key: number]: View | null }>({});
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
-  // Get chat data from params
-  const chatName = (params.name as string) || "Unknown";
-  const chatId = params.chatId as string;
+  // Contact info - in real app, this would come from navigation params or route
+  const [contact] = useState<ChatContact>({
+    name: "Ronald Richards",
+    isOnline: true,
+  });
+
+  // Handle back navigation
+  const handleGoBack = () => {
+    if (isSearchMode) {
+      // Exit search mode
+      setIsSearchMode(false);
+      setSearchText("");
+      setSearchResults([]);
+      setCurrentSearchIndex(-1);
+    } else {
+      // Navigate back to previous screen
+      router.back();
+    }
+  };
+
+  // Search functionality
+  const handleSearchPress = () => {
+    setIsSearchMode(true);
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 100);
+  };
+
+  const handleSearchChange = (text: string) => {
+    setSearchText(text);
+
+    if (text.trim()) {
+      // Find messages that contain the search text
+      const results: number[] = [];
+      messages.forEach((message, index) => {
+        if (message.text.toLowerCase().includes(text.toLowerCase())) {
+          results.push(index);
+        }
+      });
+      setSearchResults(results);
+      setCurrentSearchIndex(results.length > 0 ? 0 : -1);
+
+      // Scroll to first result
+      if (results.length > 0) {
+        scrollToMessage(results[0]);
+      }
+    } else {
+      setSearchResults([]);
+      setCurrentSearchIndex(-1);
+    }
+  };
+
+  const scrollToMessage = (messageIndex: number) => {
+    // Use refs for more accurate scrolling
+    const messageRef = messageRefs.current[messageIndex];
+    if (messageRef) {
+      messageRef.measureLayout(
+        scrollViewRef.current as any,
+        (x, y) => {
+          // Scroll to the message with some padding to center it better
+          scrollViewRef.current?.scrollTo({
+            y: Math.max(0, y - 100), // 100px padding from top
+            animated: true,
+          });
+        },
+        () => {
+          // Fallback if measureLayout fails
+          const estimatedHeight = messageIndex * 80; // More conservative estimate
+          scrollViewRef.current?.scrollTo({
+            y: Math.max(0, estimatedHeight - 100),
+            animated: true,
+          });
+        }
+      );
+    } else {
+      // Fallback if no ref
+      const estimatedHeight = messageIndex * 80; // More conservative estimate
+      scrollViewRef.current?.scrollTo({
+        y: Math.max(0, estimatedHeight - 100),
+        animated: true,
+      });
+    }
+  };
+
+  const navigateSearchResult = (direction: "up" | "down") => {
+    if (searchResults.length === 0) return;
+
+    let newIndex = currentSearchIndex;
+    if (direction === "up") {
+      newIndex =
+        currentSearchIndex > 0
+          ? currentSearchIndex - 1
+          : searchResults.length - 1;
+    } else {
+      newIndex =
+        currentSearchIndex < searchResults.length - 1
+          ? currentSearchIndex + 1
+          : 0;
+    }
+
+    setCurrentSearchIndex(newIndex);
+    scrollToMessage(searchResults[newIndex]);
+  };
+  const autoScrollToBottom = (force: boolean = false) => {
+    // Don't auto-scroll when in search mode unless forced
+    if (isSearchMode && !force) return;
+
+    if (force || !isUserScrolledUp) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 50);
+    }
+  };
+
+  // Handle scroll events to detect if user scrolled up beyond threshold
+  const handleScroll = (event: any) => {
+    // Don't update scroll state when in search mode
+    if (isSearchMode) return;
+
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+
+    // Calculate distance from bottom
+    const distanceFromBottom =
+      contentSize.height - (layoutMeasurement.height + contentOffset.y);
+
+    // Threshold: 80px from bottom - only auto-scroll if within this range
+    const scrollThreshold = 40;
+
+    // User is considered "scrolled up" if they're more than 80px from the bottom
+    const userScrolledUpBeyondThreshold = distanceFromBottom > scrollThreshold;
+
+    setIsUserScrolledUp(userScrolledUpBeyondThreshold);
+  };
+
+  // Auto-scroll when typing indicator changes
+  useEffect(() => {
+    if (isTyping && !isUserScrolledUp && !isSearchMode) {
+      // Small delay to let the typing indicator render
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [isTyping, isUserScrolledUp, isSearchMode]);
+
+  // Auto-scroll when messages change (new messages)
+  useEffect(() => {
+    if (messages.length > 0 && !isSearchMode) {
+      // Only auto-scroll for new messages if user is near bottom and not searching
+      setTimeout(() => {
+        if (!isUserScrolledUp) {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }
+      }, 50);
+    }
+  }, [messages.length, isUserScrolledUp, isSearchMode]);
 
   // Initialize with dummy conversation based on the design
   useEffect(() => {
@@ -92,8 +257,32 @@ export default function ChatScreen() {
 
     // Auto scroll to bottom after messages are loaded
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: false });
+      autoScrollToBottom(true);
     }, 100);
+  }, []);
+
+  // Keyboard event listeners for proper keyboard handling
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (event) => {
+        setKeyboardHeight(event.endCoordinates.height);
+        // Scroll to bottom when keyboard opens with delay
+        autoScrollToBottom(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
   }, []);
 
   const sendMessage = () => {
@@ -110,12 +299,9 @@ export default function ChatScreen() {
 
       setMessages((prev) => [...prev, newMessage]);
       setInputText("");
-      setInputHeight(20); // Reset to single line
 
-      // Auto scroll to bottom immediately
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 50);
+      // Auto scroll to bottom immediately for own messages
+      autoScrollToBottom(true);
 
       // Simulate typing and auto-reply
       setTimeout(() => {
@@ -147,10 +333,10 @@ export default function ChatScreen() {
           setMessages((prev) => [...prev, replyMessage]);
           setIsTyping(false);
 
-          // Auto scroll after reply
+          // Auto scroll after reply - force scroll for immediate response
           setTimeout(() => {
-            scrollViewRef.current?.scrollToEnd({ animated: true });
-          }, 100);
+            autoScrollToBottom();
+          }, 50);
         }, 1500);
       }, 800);
     }
@@ -160,41 +346,58 @@ export default function ChatScreen() {
     return time;
   };
 
-  const handleContentSizeChange = (event: any) => {
-    const { height } = event.nativeEvent.contentSize;
-    // Always adjust height based on content size, with minimum single line height
-    const newHeight = Math.max(20, Math.min(height, 100));
-    setInputHeight(newHeight);
+  const handleContentSizeChange = () => {
+    // Auto-scroll when content size changes if user is near bottom and not in search mode
+    if (!isUserScrolledUp && !isSearchMode) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 50);
+    }
   };
 
   const handleTextChange = (text: string) => {
     setInputText(text);
-
-    // Calculate height based on line breaks and text wrapping
-    const lines = text.split("\n");
-    let totalLines = 0;
-
-    lines.forEach((line) => {
-      if (line === "") {
-        totalLines += 1;
-      } else {
-        // Approximate character width - adjust based on your font
-        const charsPerLine = 35; // Adjust this based on your container width
-        totalLines += Math.ceil(line.length / charsPerLine);
-      }
-    });
-
-    const calculatedHeight = Math.max(20, totalLines * 20);
-    const constrainedHeight = Math.min(calculatedHeight, 100);
-    setInputHeight(constrainedHeight);
+    // No auto-scroll when typing unless at bottom
   };
 
-  const renderMessage = (message: Message) => {
+  const handleInputFocus = () => {
+    // Scroll to bottom when input is focused only if not scrolled up
+    setTimeout(() => {
+      autoScrollToBottom();
+    }, 300); // Delay for keyboard animation
+  };
+
+  const handleInputBlur = () => {
+    // Input blur handler - can add logic here if needed
+  };
+
+  const renderMessage = (message: Message, index: number) => {
+    const isSearchResult = searchResults.includes(index);
+    const isCurrentSearchResult =
+      currentSearchIndex >= 0 && searchResults[currentSearchIndex] === index;
+
+    // Create light version of #0961F5
+    const primarySearchColor = "#0961F5";
+    const lightSearchColor = "#E3F2FD"; // Light blue version
+    const currentSearchColor = "#BBDEFB"; // Medium blue for current result
+
     if (message.type === "media") {
       return (
         <View
           key={message.id}
+          ref={(ref) => {
+            messageRefs.current[index] = ref;
+          }}
           className={`mb-4 ${message.isOwn ? "items-end" : "items-start"}`}
+          style={{
+            backgroundColor: isCurrentSearchResult
+              ? currentSearchColor
+              : isSearchResult
+                ? lightSearchColor
+                : "transparent",
+            borderRadius: isSearchResult ? 8 : 0,
+            padding: isSearchResult ? 8 : 0,
+          }}
         >
           <View className="flex-row gap-3">
             <View
@@ -218,7 +421,20 @@ export default function ChatScreen() {
     return (
       <View
         key={message.id}
+        ref={(ref) => {
+          messageRefs.current[index] = ref;
+        }}
         className={`mb-4 ${message.isOwn ? "items-end" : "items-start"}`}
+        style={{
+          backgroundColor: isCurrentSearchResult
+            ? currentSearchColor
+            : isSearchResult
+              ? lightSearchColor
+              : "transparent",
+          borderRadius: isSearchResult ? 8 : 0,
+          padding: isSearchResult ? 8 : 0,
+          marginHorizontal: isSearchResult ? -8 : 0,
+        }}
       >
         <View
           className="px-4 pt-3"
@@ -254,32 +470,96 @@ export default function ChatScreen() {
       <SafeAreaView className="flex-1" edges={["top"]}>
         {/* Header */}
         <View className="px-6 py-4 bg-[#F5F9FF]">
-          <View className="flex-row items-center justify-between">
+          {isSearchMode ? (
+            // Search Mode Header
             <View className="flex-row items-center">
               <TouchableOpacity
-                onPress={() => router.back()}
+                onPress={handleGoBack}
                 activeOpacity={0.7}
+                className="mr-3"
               >
                 <ArrowLeft size={24} color="#0B1354" />
               </TouchableOpacity>
-              <Text className="ml-3 text-dark-blue font-jost-semibold text-[21px]">
-                Inbox
-              </Text>
+              <View className="flex-1 flex-row items-center bg-white rounded-lg px-4 py-2 mr-3">
+                <TextInput
+                  ref={searchInputRef}
+                  placeholder="Search messages..."
+                  placeholderTextColor="#9CA3AF"
+                  value={searchText}
+                  onChangeText={handleSearchChange}
+                  className="flex-1 text-[16px] text-[#202244] font-mulish-medium"
+                  autoFocus
+                />
+                {searchText.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => handleSearchChange("")}
+                    activeOpacity={0.7}
+                    className="ml-2"
+                  >
+                    <X size={20} color="#9CA3AF" />
+                  </TouchableOpacity>
+                )}
+              </View>
+              {searchResults.length > 0 && (
+                <View className="flex-row items-center gap-2">
+                  <Text className="text-[12px] text-[#545454] font-mulish-medium">
+                    {currentSearchIndex + 1}/{searchResults.length}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => navigateSearchResult("up")}
+                    activeOpacity={0.7}
+                    className="p-1"
+                  >
+                    <ChevronUp size={20} color="#0B1354" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigateSearchResult("down")}
+                    activeOpacity={0.7}
+                    className="p-1"
+                  >
+                    <ChevronDown size={20} color="#0B1354" />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-            <View className="flex-row items-center gap-4">
-              <TouchableOpacity activeOpacity={0.7}>
-                <Phone size={24} color="#0B1354" />
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.7}>
-                <Search size={24} color="#0B1354" />
-              </TouchableOpacity>
+          ) : (
+            // Normal Mode Header
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center">
+                <TouchableOpacity onPress={handleGoBack} activeOpacity={0.7}>
+                  <ArrowLeft size={24} color="#0B1354" />
+                </TouchableOpacity>
+                <View className="ml-3">
+                  <Text className="text-dark-blue font-jost-semibold text-[21px]">
+                    {contact.name}
+                  </Text>
+                  {contact.isOnline && (
+                    <Text className="text-[#4C935E] font-mulish-medium text-[12px]">
+                      Online
+                    </Text>
+                  )}
+                </View>
+              </View>
+              <View className="flex-row items-center gap-4">
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Phone size={24} color="#0B1354" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSearchPress}
+                  activeOpacity={0.7}
+                >
+                  <Search size={24} color="#0B1354" />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          )}
         </View>
 
-        <KeyboardAvoidingView
+        <View
           className="flex-1"
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{
+            marginBottom: keyboardHeight, // This pushes content up when keyboard appears
+          }}
         >
           {/* Messages */}
           <ScrollView
@@ -288,8 +568,12 @@ export default function ChatScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               paddingTop: 20,
-              
+              flexGrow: 1,
             }}
+            keyboardShouldPersistTaps="handled"
+            onScroll={handleScroll}
+            scrollEventThrottle={100}
+            onContentSizeChange={handleContentSizeChange}
           >
             {/* Today Badge */}
             <View className="items-center mb-6">
@@ -300,7 +584,7 @@ export default function ChatScreen() {
               </View>
             </View>
 
-            {messages.map(renderMessage)}
+            {messages.map((message, index) => renderMessage(message, index))}
 
             {/* Typing Indicator */}
             {isTyping && (
@@ -325,52 +609,80 @@ export default function ChatScreen() {
             )}
           </ScrollView>
 
+          {/* Scroll to bottom button */}
+          {isUserScrolledUp && (
+            <TouchableOpacity
+              onPress={() => autoScrollToBottom(true)}
+              activeOpacity={0.7}
+              className="absolute right-6 bottom-20 w-10 h-10 bg-white rounded-full items-center justify-center"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 5,
+              }}
+            >
+              <ChevronDown size={20} color="#0B1354" />
+            </TouchableOpacity>
+          )}
+
           {/* Message Input */}
           <View
-            className="px-6 pt-1 bg-[#F5F9FF]"
-            style={{ paddingBottom: Math.max(insets.bottom + 16, 20) }}
+            className="px-6 py-4 bg-[#F5F9FF]"
+            style={{
+              paddingBottom: Math.max(insets.bottom + 16, 20),
+            }}
           >
             <View
-              style={{ paddingLeft: 16, paddingRight: 8 }}
-              className={`
-                flex-row items-center bg-white rounded-full py-2
-                border-2 border-[#E8F1FF]
-                transition-all duration-200
-                ${
-                  isInputFocused
-                    ? "border-primary shadow-xl shadow-primary/20"
-                    : ""
-                }
-              `}
+              style={{
+                paddingLeft: 16,
+                paddingRight: 8,
+                flexDirection: "row",
+                alignItems: "flex-end",
+                backgroundColor: "white",
+                borderRadius: 24,
+                paddingVertical: 8,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2,
+                elevation: 2,
+                minHeight: 56, // Ensure consistent minimum height
+              }}
             >
               <TextInput
-                className="flex-1 text-[16px] text-[#545454] font-mulish-medium"
                 placeholder="Message"
                 placeholderTextColor="#9CA3AF"
                 value={inputText}
                 onChangeText={handleTextChange}
                 onContentSizeChange={handleContentSizeChange}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 multiline
                 maxLength={500}
-                onSubmitEditing={sendMessage}
-                returnKeyType="send"
                 style={{
-                  height: inputHeight,
-                  textAlignVertical: "center",
-                  outline: "none",
+                  flex: 1,
+                  fontSize: 16,
+                  color: "#202244",
+                  minHeight: 40,
+                  maxHeight: 120,
+                  fontFamily: "Mulish-Medium",
+                  backgroundColor: "transparent",
+                  paddingHorizontal: 0,
+                  paddingVertical: 8,
+                  textAlignVertical: "top",
                 }}
               />
 
-              <TouchableOpacity activeOpacity={0.7} className="mr-3">
+              <TouchableOpacity activeOpacity={0.7} className="mr-3 mb-1 py-3">
                 <Paperclip size={20} color="#545454" />
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={sendMessage}
                 activeOpacity={0.7}
-                className="w-12 h-12 bg-primary rounded-full items-center justify-center"
+                className="w-12 h-12 bg-primary rounded-full items-center justify-center mb-1"
                 disabled={!inputText.trim()}
               >
                 {inputText.trim() ? (
@@ -381,7 +693,7 @@ export default function ChatScreen() {
               </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       </SafeAreaView>
     </View>
   );

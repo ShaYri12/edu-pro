@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  Platform,
 } from "react-native";
 import {
   SafeAreaView,
@@ -122,7 +123,7 @@ export default function ChatScreen() {
     if (messageRef) {
       messageRef.measureLayout(
         scrollViewRef.current as any,
-        (x, y) => {
+        (_x, y) => {
           // Scroll to the message with some padding to center it better
           scrollViewRef.current?.scrollTo({
             y: Math.max(0, y - 100), // 100px padding from top
@@ -167,13 +168,27 @@ export default function ChatScreen() {
     setCurrentSearchIndex(newIndex);
     scrollToMessage(searchResults[newIndex]);
   };
-  const autoScrollToBottom = (force: boolean = false) => {
+  const autoScrollToBottom = (
+    force: boolean = false,
+    hideButton: boolean = true
+  ) => {
     // Don't auto-scroll when in search mode unless forced
     if (isSearchMode && !force) return;
 
     if (force || !isUserScrolledUp) {
+      // Immediately hide the button when manually triggered
+      if (hideButton && isUserScrolledUp) {
+        setIsUserScrolledUp(false);
+      }
+
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
+
+        // Always ensure button is hidden after scrolling to bottom
+        setTimeout(() => {
+          // Force hide button since we're now at the bottom
+          setIsUserScrolledUp(false);
+        }, 500); // Wait for scroll animation to complete
       }, 50);
     }
   };
@@ -195,29 +210,24 @@ export default function ChatScreen() {
     // User is considered "scrolled up" if they're more than 80px from the bottom
     const userScrolledUpBeyondThreshold = distanceFromBottom > scrollThreshold;
 
-    setIsUserScrolledUp(userScrolledUpBeyondThreshold);
+    // Auto-hide scroll button when user scrolls to bottom manually
+    if (!userScrolledUpBeyondThreshold && isUserScrolledUp) {
+      setIsUserScrolledUp(false);
+    } else if (userScrolledUpBeyondThreshold && !isUserScrolledUp) {
+      setIsUserScrolledUp(true);
+    }
   };
 
   // Auto-scroll when typing indicator changes
   useEffect(() => {
-    if (isTyping && !isUserScrolledUp && !isSearchMode) {
-      // Small delay to let the typing indicator render
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    }
+    // Don't auto-scroll for typing indicator to prevent interference
+    // Only scroll if user is manually at the very bottom
   }, [isTyping, isUserScrolledUp, isSearchMode]);
 
   // Auto-scroll when messages change (new messages)
   useEffect(() => {
-    if (messages.length > 0 && !isSearchMode) {
-      // Only auto-scroll for new messages if user is near bottom and not searching
-      setTimeout(() => {
-        if (!isUserScrolledUp) {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        }
-      }, 50);
-    }
+    // Only auto-scroll for the very first load, not for new messages
+    // This prevents interference with manual scrolling
   }, [messages.length, isUserScrolledUp, isSearchMode]);
 
   // Initialize with dummy conversation based on the design
@@ -266,7 +276,7 @@ export default function ChatScreen() {
 
     // Auto scroll to bottom after messages are loaded
     setTimeout(() => {
-      autoScrollToBottom(true);
+      autoScrollToBottom(true, false);
     }, 100);
   }, []);
 
@@ -276,8 +286,10 @@ export default function ChatScreen() {
       "keyboardDidShow",
       (event) => {
         setKeyboardHeight(event.endCoordinates.height);
-        // Scroll to bottom when keyboard opens with delay
-        autoScrollToBottom(true);
+        // Auto-scroll to show latest messages when keyboard opens
+        setTimeout(() => {
+          autoScrollToBottom(true, false); // Force scroll, don't hide button yet
+        }, 100);
       }
     );
 
@@ -309,8 +321,10 @@ export default function ChatScreen() {
       setMessages((prev) => [...prev, newMessage]);
       setInputText("");
 
-      // Auto scroll to bottom immediately for own messages
-      autoScrollToBottom(true);
+      // Only auto-scroll for own messages if user is at bottom
+      if (!isUserScrolledUp) {
+        autoScrollToBottom(true, false);
+      }
 
       // Simulate typing and auto-reply
       setTimeout(() => {
@@ -342,9 +356,11 @@ export default function ChatScreen() {
           setMessages((prev) => [...prev, replyMessage]);
           setIsTyping(false);
 
-          // Auto scroll after reply - force scroll for immediate response
+          // Auto scroll after reply - only if user is at bottom
           setTimeout(() => {
-            autoScrollToBottom();
+            if (!isUserScrolledUp) {
+              autoScrollToBottom(false, false); // Don't force, don't hide button
+            }
           }, 50);
         }, 1500);
       }, 800);
@@ -356,12 +372,8 @@ export default function ChatScreen() {
   };
 
   const handleContentSizeChange = () => {
-    // Auto-scroll when content size changes if user is near bottom and not in search mode
-    if (!isUserScrolledUp && !isSearchMode) {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 50);
-    }
+    // Don't auto-scroll on content size change to prevent interference
+    // User can manually scroll or use the scroll button
   };
 
   const handleTextChange = (text: string) => {
@@ -370,10 +382,8 @@ export default function ChatScreen() {
   };
 
   const handleInputFocus = () => {
-    // Scroll to bottom when input is focused only if not scrolled up
-    setTimeout(() => {
-      autoScrollToBottom();
-    }, 300); // Delay for keyboard animation
+    // Don't auto-scroll on focus to prevent fighting with manual scrolling
+    // Let the keyboard listener handle it if needed
   };
 
   const handleInputBlur = () => {
@@ -385,8 +395,7 @@ export default function ChatScreen() {
     const isCurrentSearchResult =
       currentSearchIndex >= 0 && searchResults[currentSearchIndex] === index;
 
-    // Create light version of #0961F5
-    const primarySearchColor = "#0961F5";
+    // Create light version for search highlighting
     const lightSearchColor = "#E3F2FD"; // Light blue version
     const currentSearchColor = "#BBDEFB"; // Medium blue for current result
 
@@ -565,9 +574,9 @@ export default function ChatScreen() {
         </View>
 
         <View
-          className="flex-1"
           style={{
-            marginBottom: keyboardHeight, // This pushes content up when keyboard appears
+            flex: 1,
+            paddingBottom: Platform.OS === "android" ? keyboardHeight : 0,
           }}
         >
           {/* Messages */}
@@ -623,8 +632,12 @@ export default function ChatScreen() {
             <TouchableOpacity
               onPress={() => autoScrollToBottom(true)}
               activeOpacity={0.7}
-              className="absolute right-6 bottom-20 w-10 h-10 bg-white rounded-full items-center justify-center"
+              className="absolute right-6 w-10 h-10 bg-white rounded-full items-center justify-center"
               style={{
+                bottom:
+                  Platform.OS === "android"
+                    ? 124 + keyboardHeight // Move up with keyboard on Android
+                    : 124, // iOS handles it naturally
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.1,
@@ -638,7 +651,7 @@ export default function ChatScreen() {
 
           {/* Message Input */}
           <View
-            className="px-6 py-4 bg-[#F5F9FF]"
+            className="px-6 pt-1 bg-[#F5F9FF]"
             style={{
               paddingBottom: Math.max(insets.bottom + 16, 20),
             }}
@@ -651,13 +664,13 @@ export default function ChatScreen() {
                 alignItems: "flex-end",
                 backgroundColor: "white",
                 borderRadius: 24,
-                paddingVertical: 8,
+                paddingVertical: 3.5,
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.1,
                 shadowRadius: 2,
                 elevation: 2,
-                minHeight: 56, // Ensure consistent minimum height
+                minHeight: 56,
               }}
             >
               <TextInput
@@ -679,12 +692,15 @@ export default function ChatScreen() {
                   fontFamily: "Mulish-Medium",
                   backgroundColor: "transparent",
                   paddingHorizontal: 0,
-                  paddingVertical: 8,
+                  paddingVertical: 15,
                   textAlignVertical: "top",
                 }}
               />
 
-              <TouchableOpacity activeOpacity={0.7} className="mr-3 mb-1 py-3">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className="mr-3 py-3 mb-0.5"
+              >
                 <Paperclip size={20} color="#545454" />
               </TouchableOpacity>
 
